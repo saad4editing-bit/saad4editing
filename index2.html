@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lumen Studio — Web Design & Development</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Onest:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0b;
+  --bg-2:#0f0f11;
+  --surface:rgba(255,255,255,0.04);
+  --stroke:rgba(255,255,255,0.09);
+  --stroke-strong:rgba(255,255,255,0.16);
+  --text:#f4f3ee;
+  --muted:#9a988f;
+  --faint:#615f58;
+  --accent:#ffdb45;
+  --accent-deep:#f4c20d;
+  --accent-glow:rgba(255,219,69,0.35);
+  --display:'Bricolage Grotesque',sans-serif;
+  --body:'Onest',sans-serif;
+  --ease:cubic-bezier(.2,.7,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  line-height:1.6;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--accent);color:#0a0a0b}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{width:min(1180px,92vw);margin:0 auto}
+section{position:relative;z-index:2}
+
+/* ---------- floating gradient backdrop ---------- */
+.bg-fx{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;mix-blend-mode:screen}
+.blob.a{width:520px;height:520px;background:radial-gradient(circle,#ffdb45,transparent 70%);top:-120px;left:-80px;animation:float1 18s var(--ease) infinite}
+.blob.b{width:460px;height:460px;background:radial-gradient(circle,#6b5a12,transparent 70%);bottom:-140px;right:-100px;animation:float2 22s var(--ease) infinite}
+.blob.c{width:380px;height:380px;background:radial-gradient(circle,#3a3414,transparent 70%);top:40%;left:55%;animation:float3 26s var(--ease) infinite}
+@keyframes float1{0%,100%{transform:translate(0,0)}50%{transform:translate(120px,90px)}}
+@keyframes float2{0%,100%{transform:translate(0,0)}50%{transform:translate(-100px,-80px)}}
+@keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-120px,60px) scale(1.15)}}
+.grain{position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.045;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* ---------- loader ---------- */
+#loader{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center;flex-direction:column;gap:26px;transition:opacity .7s var(--ease),visibility .7s}
+#loader.done{opacity:0;visibility:hidden}
+.loader-logo{width:74px;height:74px;display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:2.4rem;color:var(--accent);border:2px solid var(--accent);border-radius:18px;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 0 var(--accent-glow))}50%{transform:scale(1.08);filter:drop-shadow(0 0 22px var(--accent-glow))}}
+.loader-bar{width:160px;height:2px;background:var(--stroke);border-radius:2px;overflow:hidden}
+.loader-bar i{display:block;height:100%;width:40%;background:var(--accent);border-radius:2px;animation:slide 1.1s var(--ease) infinite}
+@keyframes slide{0%{transform:translateX(-120%)}100%{transform:translateX(320%)}}
+
+/* ---------- nav ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:100;transition:all .4s var(--ease)}
+header.scrolled .nav-inner{background:rgba(12,12,14,0.7);backdrop-filter:blur(18px) saturate(150%);border-color:var(--stroke)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:12px 22px;border:1px solid transparent;border-radius:18px;transition:all .4s var(--ease)}
+.brand{display:flex;align-items:center;gap:11px;font-family:var(--display);font-weight:700;font-size:1.12rem;letter-spacing:-.02em}
+.brand img{width:30px;height:30px}
+.brand span b{color:var(--accent)}
+.nav-links{display:flex;gap:32px;font-size:.93rem;color:var(--muted)}
+.nav-links a{position:relative;transition:color .25s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-5px;width:0;height:1.5px;background:var(--accent);transition:width .3s var(--ease)}
+.nav-links a:hover{color:var(--text)}
+.nav-links a:hover::after{width:100%}
+.nav-cta{font-family:var(--display);font-weight:600;font-size:.9rem;padding:10px 20px;border-radius:12px;background:var(--accent);color:#0a0a0b;transition:transform .25s var(--ease),box-shadow .3s}
+.nav-cta:hover{transform:translateY(-2px);box-shadow:0 10px 30px -8px var(--accent-glow)}
+.burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+.burger span{width:24px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+
+/* ---------- buttons ---------- */
+.btn{font-family:var(--display);font-weight:600;font-size:1rem;padding:15px 28px;border-radius:14px;display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:1px solid transparent;transition:transform .3s var(--ease),box-shadow .35s,background .3s;position:relative;overflow:hidden}
+.btn-primary{background:var(--accent);color:#0a0a0b}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 40px -12px var(--accent-glow)}
+.btn-primary::before{content:'';position:absolute;top:0;left:-120%;width:60%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.55),transparent);transform:skewX(-20deg);transition:left .6s var(--ease)}
+.btn-primary:hover::before{left:140%}
+.btn-ghost{background:var(--surface);color:var(--text);border:1px solid var(--stroke-strong);backdrop-filter:blur(8px)}
+.btn-ghost:hover{transform:translateY(-3px);border-color:var(--accent);color:var(--accent)}
+
+/* ---------- hero ---------- */
+.hero{padding:190px 0 120px;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:.82rem;letter-spacing:.04em;color:var(--muted);border:1px solid var(--stroke);background:var(--surface);padding:8px 16px;border-radius:100px;backdrop-filter:blur(8px);margin-bottom:28px}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 10px var(--accent);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(2.6rem,6.4vw,5.1rem);line-height:1.02;letter-spacing:-.03em;max-width:15ch}
+.hero h1 em{font-style:normal;color:var(--accent);position:relative}
+.hero p.sub{color:var(--muted);font-size:clamp(1.05rem,1.6vw,1.28rem);max-width:55ch;margin:28px 0 40px}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap}
+.hero-stats{display:flex;gap:46px;margin-top:64px;flex-wrap:wrap}
+.hero-stats .s b{font-family:var(--display);font-size:2.1rem;font-weight:700;color:var(--text);display:block;letter-spacing:-.02em}
+.hero-stats .s span{color:var(--faint);font-size:.85rem}
+.hero-portrait{position:absolute;right:0;top:140px;width:min(380px,34vw);opacity:.9;filter:drop-shadow(0 0 40px var(--accent-glow));animation:floatY 6s ease-in-out infinite}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-16px)}}
+
+/* ---------- section heading ---------- */
+.sec{padding:110px 0}
+.sec-head{margin-bottom:60px;max-width:640px}
+.tag{font-family:var(--display);font-size:.85rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);display:block;margin-bottom:14px}
+.sec-head h2{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4vw,3.1rem);letter-spacing:-.025em;line-height:1.05}
+.sec-head p{color:var(--muted);margin-top:16px;font-size:1.06rem}
+
+/* ---------- glass card base ---------- */
+.glass{background:var(--surface);border:1px solid var(--stroke);border-radius:20px;backdrop-filter:blur(16px);transition:transform .4s var(--ease),border-color .4s,box-shadow .4s}
+
+/* ---------- services ---------- */
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.service{padding:32px 28px;cursor:default;position:relative;overflow:hidden}
+.service:nth-child(1){grid-column:span 2}
+.service:nth-child(4){grid-column:span 2}
+.service:hover{transform:translateY(-6px);border-color:var(--stroke-strong);box-shadow:0 24px 60px -30px rgba(0,0,0,.8)}
+.service .ico{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,rgba(255,219,69,.2),rgba(255,219,69,.03));border:1px solid var(--stroke);display:grid;place-items:center;margin-bottom:22px;color:var(--accent)}
+.service h3{font-family:var(--display);font-weight:600;font-size:1.32rem;letter-spacing:-.02em;margin-bottom:8px}
+.service p{color:var(--muted);font-size:.97rem}
+.service .glow{position:absolute;width:200px;height:200px;background:radial-gradient(circle,var(--accent-glow),transparent 70%);top:-60px;right:-60px;opacity:0;transition:opacity .5s}
+.service:hover .glow{opacity:.6}
+
+/* ---------- why ---------- */
+.why-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:24px;align-items:stretch}
+.why-feature{padding:42px 38px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.why-feature .big{font-family:var(--display);font-size:clamp(2.4rem,5vw,3.6rem);font-weight:800;color:var(--accent);letter-spacing:-.03em;line-height:1}
+.why-feature h3{font-family:var(--display);font-size:1.6rem;font-weight:600;margin:18px 0 10px;letter-spacing:-.02em}
+.why-feature p{color:var(--muted)}
+.why-list{display:flex;flex-direction:column;gap:16px}
+.why-item{padding:24px 26px;display:flex;gap:16px;align-items:flex-start;transition:transform .35s var(--ease),border-color .35s}
+.why-item:hover{transform:translateX(6px);border-color:var(--stroke-strong)}
+.why-item .num{font-family:var(--display);font-weight:700;color:var(--accent);font-size:1.1rem;flex-shrink:0}
+.why-item h4{font-family:var(--display);font-weight:600;font-size:1.08rem;margin-bottom:4px}
+.why-item p{color:var(--muted);font-size:.93rem}
+
+/* ---------- portfolio ---------- */
+.work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.work-soon{cursor:default}
+.work-soon .cat{color:var(--faint)}
+.work-soon::after{content:'Placeholder';position:absolute;top:18px;left:18px;font-family:var(--display);font-size:.68rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:rgba(255,219,69,.12);border:1px solid var(--stroke);padding:5px 10px;border-radius:8px;z-index:2}
+.work{border-radius:20px;overflow:hidden;position:relative;cursor:pointer;border:1px solid var(--stroke);aspect-ratio:16/11}
+.work .thumb{position:absolute;inset:0;transition:transform .7s var(--ease)}
+.work:hover .thumb{transform:scale(1.07)}
+.work .overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(8,8,9,.92) 0%,rgba(8,8,9,.2) 55%,transparent 100%);display:flex;flex-direction:column;justify-content:flex-end;padding:30px;transition:background .4s}
+.work .cat{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);transform:translateY(12px);opacity:0;transition:.4s var(--ease) .05s}
+.work h3{font-family:var(--display);font-weight:600;font-size:1.5rem;letter-spacing:-.02em;transform:translateY(12px);opacity:.92;transition:.4s var(--ease)}
+.work p{color:var(--muted);font-size:.93rem;max-height:0;overflow:hidden;opacity:0;transition:.45s var(--ease)}
+.work:hover .cat{transform:translateY(0);opacity:1}
+.work:hover h3{transform:translateY(0);opacity:1}
+.work:hover p{max-height:60px;opacity:1;margin-top:8px}
+.work .arrow{position:absolute;top:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#0a0a0b;display:grid;place-items:center;transform:translate(10px,-10px) scale(.7);opacity:0;transition:.4s var(--ease)}
+.work:hover .arrow{transform:translate(0,0) scale(1);opacity:1}
+
+/* ---------- pricing ---------- */
+.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+.price{padding:38px 32px;display:flex;flex-direction:column;position:relative;overflow:hidden;transition:transform .4s var(--ease),border-color .4s,box-shadow .5s}
+.price:hover{transform:translateY(-8px);border-color:var(--accent);box-shadow:0 30px 70px -30px var(--accent-glow),0 0 0 1px var(--accent-glow)}
+.price.feat{border-color:var(--stroke-strong);background:linear-gradient(180deg,rgba(255,219,69,.07),var(--surface))}
+.price .badge{position:absolute;top:20px;right:20px;font-family:var(--display);font-size:.72rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:#0a0a0b;padding:5px 12px;border-radius:8px}
+.price .pname{font-family:var(--display);font-weight:600;font-size:1.25rem;letter-spacing:-.01em}
+.price .pdesc{color:var(--muted);font-size:.92rem;margin:6px 0 22px}
+.price .amount{font-family:var(--display);font-weight:800;font-size:3rem;letter-spacing:-.03em;line-height:1}
+.price .amount small{font-size:1rem;font-weight:500;color:var(--faint)}
+.price ul{list-style:none;margin:26px 0 30px;display:flex;flex-direction:column;gap:13px}
+.price li{display:flex;gap:11px;align-items:flex-start;color:var(--muted);font-size:.95rem}
+.price li svg{flex-shrink:0;margin-top:3px;color:var(--accent)}
+.price .btn{width:100%;justify-content:center;margin-top:auto}
+
+/* ---------- faq ---------- */
+.faq-wrap{max-width:780px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.faq-item{padding:0 26px;cursor:pointer;overflow:hidden;transition:border-color .3s,background .3s}
+.faq-item:hover{border-color:var(--stroke-strong)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 0;font-family:var(--display);font-weight:600;font-size:1.12rem;letter-spacing:-.01em}
+.faq-q .pm{width:26px;height:26px;flex-shrink:0;position:relative;transition:transform .4s var(--ease)}
+.faq-q .pm::before,.faq-q .pm::after{content:'';position:absolute;background:var(--accent);border-radius:2px;top:50%;left:50%;transform:translate(-50%,-50%)}
+.faq-q .pm::before{width:14px;height:2px}
+.faq-q .pm::after{width:2px;height:14px;transition:transform .4s var(--ease)}
+.faq-item.open .pm{transform:rotate(180deg)}
+.faq-item.open .pm::after{transform:translate(-50%,-50%) scaleY(0)}
+.faq-a{max-height:0;opacity:0;transition:max-height .45s var(--ease),opacity .35s,padding .4s}
+.faq-a p{color:var(--muted);padding-bottom:0}
+.faq-item.open .faq-a{max-height:220px;opacity:1}
+.faq-item.open .faq-a p{padding-bottom:24px}
+
+/* ---------- contact ---------- */
+.contact-grid{display:grid;grid-template-columns:1fr;gap:30px;max-width:680px;margin:0 auto;text-align:center}
+.contact-left .socials,.contact-left .tag{justify-content:center}
+.contact-left .socials{display:flex;justify-content:center}
+.contact-left h2{font-family:var(--display);font-weight:700;font-size:clamp(2rem,4vw,2.9rem);letter-spacing:-.025em;line-height:1.05}
+.contact-left p{color:var(--muted);margin:18px 0 30px;font-size:1.05rem}
+.socials{display:flex;gap:12px;flex-wrap:wrap}
+.soc{width:48px;height:48px;border-radius:13px;display:grid;place-items:center;color:var(--muted);transition:transform .3s var(--ease),color .3s,border-color .3s,background .3s}
+.soc:hover{transform:translateY(-4px);color:var(--accent);border-color:var(--accent)}
+.wa-btn{margin-top:22px;display:inline-flex;align-items:center;gap:12px;padding:15px 24px;border-radius:14px;background:#25d366;color:#063;font-family:var(--display);font-weight:600;transition:transform .3s var(--ease),box-shadow .35s}
+.wa-btn:hover{transform:translateY(-3px);box-shadow:0 16px 40px -14px rgba(37,211,102,.6)}
+
+
+
+
+
+
+
+
+/* ---------- footer ---------- */
+footer{padding:70px 0 40px;border-top:1px solid var(--stroke);margin-top:80px;position:relative;z-index:2}
+.foot-top{display:flex;justify-content:space-between;align-items:flex-start;gap:40px;flex-wrap:wrap;margin-bottom:50px}
+.foot-brand{max-width:320px}
+.foot-brand .brand{margin-bottom:14px}
+.foot-brand p{color:var(--muted);font-size:.95rem}
+.foot-cols{display:flex;gap:64px;flex-wrap:wrap}
+.foot-col h5{font-family:var(--display);font-weight:600;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:16px}
+.foot-col a{display:block;color:var(--muted);font-size:.95rem;margin-bottom:10px;transition:color .25s,transform .25s}
+.foot-col a:hover{color:var(--accent);transform:translateX(3px)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:30px;border-top:1px solid var(--stroke);color:var(--faint);font-size:.88rem}
+
+/* ---------- reveal anim ---------- */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .burger{display:flex}
+  .nav-links.mobile{display:flex;position:absolute;top:80px;left:4vw;right:4vw;flex-direction:column;gap:20px;padding:26px;background:rgba(14,14,16,.96);backdrop-filter:blur(20px);border:1px solid var(--stroke);border-radius:18px}
+  .hero-portrait{display:none}
+  .services-grid,.price-grid{grid-template-columns:1fr}
+  .service:nth-child(1),.service:nth-child(4){grid-column:span 1}
+  .why-grid,.work-grid,.contact-grid{grid-template-columns:1fr}
+  .hero{padding:150px 0 80px}
+}
+</style>
+</head>
+<body>
+
+<!-- loader -->
+<div id="loader">
+  <div class="loader-logo">L</div>
+  <div class="loader-bar"><i></i></div>
+</div>
+
+<!-- background fx -->
+<div class="bg-fx"><div class="blob a"></div><div class="blob b"></div><div class="blob c"></div></div>
+<div class="grain"></div>
+
+<!-- nav -->
+<header id="hdr">
+  <div class="wrap">
+    <nav class="nav-inner">
+      <a class="brand" href="#hero"><span>Lumen<b>.</b>Studio</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#services">Services</a>
+        <a href="#why">Why Me</a>
+        <a href="#work">Work</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a href="#contact" class="nav-cta">Start a Project</a>
+      <div class="burger" id="burger"><span></span><span></span><span></span></div>
+    </nav>
+  </div>
+</header>
+
+<!-- hero -->
+<section class="hero" id="hero">
+  
+  <div class="wrap">
+    <div class="eyebrow reveal"><span class="dot"></span>Available for new projects · 2026</div>
+    <h1 class="reveal d1">Build a Website That Makes People <em>Trust</em> Your Business</h1>
+    <p class="sub reveal d2">I create modern, fast, and professional websites for businesses, creators, and brands that want to stand out online.</p>
+    <div class="hero-cta reveal d3">
+      <a href="#work" class="btn btn-primary">View My Work →</a>
+      <a href="#contact" class="btn btn-ghost">Start Your Project</a>
+    </div>
+    <div class="hero-stats reveal d4">
+      <div class="s"><b>60+</b><span>Projects Delivered</span></div>
+      <div class="s"><b>5.0★</b><span>Average Rating</span></div>
+      <div class="s"><b>7 Days</b><span>Avg. Turnaround</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- services -->
+<section class="sec" id="services">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">What I Do</span>
+      <h2>Services built to convert visitors into customers</h2>
+      <p>Every site is designed for clarity, speed, and trust — engineered to move people toward action.</p>
+    </div>
+    <div class="services-grid">
+      <div class="glass service reveal"><div class="glow"></div>
+        <div class="ico"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M3 9h18M8 21h8"/></svg></div>
+        <h3>Business Websites</h3><p>Polished, credible sites that present your company professionally and turn first impressions into leads.</p>
+      </div>
+      <div class="glass service reveal d1"><div class="glow"></div>
+        <div class="ico"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0116 0"/></svg></div>
+        <h3>Portfolio Websites</h3><p>Showcase your work beautifully with layouts that put your craft front and center.</p>
+      </div>
+      <div class="glass service reveal d2"><div class="glow"></div>
+        <div class="ico"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h7l-1 8 10-12h-7z"/></svg></div>
+        <h3>Landing Pages</h3><p>High-converting single pages crafted around one goal — campaigns, launches, and ads.</p>
+      </div>
+      <div class="glass service reveal"><div class="glow"></div>
+        <div class="ico"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.5 13h11l2-9H6"/></svg></div>
+        <h3>E-Commerce Websites</h3><p>Fast, secure online stores with smooth checkout flows that make buying effortless.</p>
+      </div>
+      <div class="glass service reveal d1"><div class="glow"></div>
+        <div class="ico"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 9h18M8 3v4M16 3v4"/></svg></div>
+        <h3>Booking Websites</h3><p>Let clients schedule, reserve, and pay online — automated and always available.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- why -->
+<section class="sec" id="why">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Why It Matters</span>
+      <h2>Your website is your most important first impression</h2>
+      <p>Customers decide whether to trust a business in seconds. A professional website does that work for you — around the clock.</p>
+    </div>
+    <div class="why-grid">
+      <div class="glass why-feature reveal">
+        <div><div class="big">75%</div><h3>Judge credibility by design</h3>
+        <p>Three out of four people decide whether they trust a business based purely on its website design. A dated or clunky site quietly turns customers away before they ever reach out.</p></div>
+        <a href="#contact" class="btn btn-primary" style="align-self:flex-start;margin-top:30px">Fix My First Impression →</a>
+      </div>
+      <div class="why-list">
+        <div class="glass why-item reveal d1"><span class="num">01</span><div><h4>Build instant trust</h4><p>Clean design, fast loads, and clear messaging signal that you're a serious, reliable business.</p></div></div>
+        <div class="glass why-item reveal d2"><span class="num">02</span><div><h4>Get more customers</h4><p>Strategic layouts guide visitors toward booking, buying, or contacting you — not bouncing.</p></div></div>
+        <div class="glass why-item reveal d3"><span class="num">03</span><div><h4>Grow online</h4><p>SEO-ready, mobile-first builds help you reach the right people and scale beyond word of mouth.</p></div></div>
+        <div class="glass why-item reveal d4"><span class="num">04</span><div><h4>Stand out</h4><p>A distinctive, premium site separates you from competitors still hiding behind templates.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- portfolio -->
+<section class="sec" id="work">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Selected Work</span>
+      <h2>Projects that look great and perform better</h2>
+    </div>
+    <div class="work-grid">
+      <a class="work reveal" href="https://saad4editing.com" target="_blank" rel="noopener" data-grad="linear-gradient(135deg,#241f0e,#3d3414)">
+        <div class="thumb"></div>
+        <div class="arrow"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14L14 4M6 4h8v8"/></svg></div>
+        <div class="overlay"><span class="cat">Creators &amp; Brands</span><h3>saad4editing</h3><p>A bold, motion-driven site for a premium video editing studio — built to convert views into clients.</p></div>
+      </a>
+      <a class="work reveal d1" href="https://mayaaesthetics.netlify.app/" target="_blank" rel="noopener" data-grad="linear-gradient(135deg,#2d1b24,#3d1f33)">
+        <div class="thumb"></div>
+        <div class="arrow"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14L14 4M6 4h8v8"/></svg></div>
+        <div class="overlay"><span class="cat">Beauty &amp; Wellness</span><h3>Maya Aesthetics</h3><p>An elegant, premium institute site in Kénitra with WhatsApp booking and before/after results.</p></div>
+      </a>
+      <div class="work work-soon reveal d2" data-grad="linear-gradient(135deg,#16181c,#1e2228)">
+        <div class="thumb"></div>
+        <div class="overlay"><span class="cat">Coming Soon</span><h3>Project Three</h3><p>New project — details added soon.</p></div>
+      </div>
+      <div class="work work-soon reveal d3" data-grad="linear-gradient(135deg,#1a1814,#22201a)">
+        <div class="thumb"></div>
+        <div class="overlay"><span class="cat">Coming Soon</span><h3>Project Four</h3><p>New project — details added soon.</p></div>
+      </div>
+      <div class="work work-soon reveal d2" data-grad="linear-gradient(135deg,#141a18,#1a2420)">
+        <div class="thumb"></div>
+        <div class="overlay"><span class="cat">Coming Soon</span><h3>Project Five</h3><p>New project — details added soon.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- pricing -->
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="tag">Pricing</span>
+      <h2>Simple, transparent packages</h2>
+      <p>No hidden fees. Every project includes mobile-responsive design, basic SEO, and a launch walkthrough.</p>
+    </div>
+    <div class="price-grid">
+      <div class="glass price reveal">
+        <div class="pname">Basic</div>
+        <div class="pdesc">For individuals & small launches</div>
+        <div class="amount">$99<small>/ project</small></div>
+        <ul>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Up to 3 pages</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Mobile responsive</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Contact form</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Basic SEO setup</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>7-day delivery</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Choose Basic</a>
+      </div>
+      <div class="glass price feat reveal d1">
+        <span class="badge">Most Popular</span>
+        <div class="pname">Standard</div>
+        <div class="pdesc">For growing businesses</div>
+        <div class="amount">$199<small>/ project</small></div>
+        <ul>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Up to 8 pages</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Custom animations</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>CMS / blog integration</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Advanced SEO</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>2 rounds of revisions</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Choose Standard</a>
+      </div>
+      <div class="glass price reveal d2">
+        <div class="pname">Premium</div>
+        <div class="pdesc">For brands that want it all</div>
+        <div class="amount">$349<small>/ project</small></div>
+        <ul>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Unlimited pages</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>E-commerce / booking</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Bespoke design system</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>Performance optimization</li>
+          <li><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M3 8l3.5 3.5L13 4"/></svg>30 days support</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Choose Premium</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- faq -->
+<section class="sec" id="faq">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-left:auto;margin-right:auto;text-align:center">
+      <span class="tag">FAQ</span>
+      <h2>Questions, answered</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="glass faq-item"><div class="faq-q">How long does a website take to build?<span class="pm"></span></div><div class="faq-a"><p>Most projects launch within 1–3 weeks depending on scope. Basic sites can be ready in as little as 7 days, while larger e-commerce or custom builds take a little longer.</p></div></div>
+      <div class="glass faq-item"><div class="faq-q">Do you design and develop, or just one?<span class="pm"></span></div><div class="faq-a"><p>Both. I handle the entire process end-to-end — strategy, UI/UX design, and full development — so you get one consistent point of contact and a cohesive result.</p></div></div>
+      <div class="glass faq-item"><div class="faq-q">Will my website work on mobile?<span class="pm"></span></div><div class="faq-a"><p>Always. Every site I build is mobile-first and tested across phones, tablets, and desktops to look and perform flawlessly everywhere.</p></div></div>
+      <div class="glass faq-item"><div class="faq-q">Can you update an existing website?<span class="pm"></span></div><div class="faq-a"><p>Yes. Whether it's a refresh, a redesign, or new features, I can work with your current site or rebuild it from the ground up — whichever serves your goals best.</p></div></div>
+      <div class="glass faq-item"><div class="faq-q">Do you offer ongoing support?<span class="pm"></span></div><div class="faq-a"><p>I do. Premium projects include 30 days of support, and I offer flexible monthly maintenance plans for updates, backups, and peace of mind.</p></div></div>
+      <div class="glass faq-item"><div class="faq-q">How do payments work?<span class="pm"></span></div><div class="faq-a"><p>Typically 50% upfront to reserve your slot and 50% on completion before launch. Larger projects can be split into milestones — just ask.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- contact -->
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <span class="tag">Let's Talk</span>
+        <h2>Ready to build something people remember?</h2>
+        <p>Tell me about your project and I'll get back to you within 24 hours with ideas and next steps.</p>
+        <div class="socials">
+          <a class="glass soc" href="#" aria-label="X"><svg width="18" height="18" fill="currentColor"><path d="M13.5 2h2.6l-5.7 6.5L17 16h-4.5l-3.5-4.6L4.9 16H2.3l6.1-7L1.6 2h4.6l3.2 4.2L13.5 2zm-.9 12.4h1.4L5.4 3.5H3.9l8.7 10.9z"/></svg></a>
+          <a class="glass soc" href="#" aria-label="Instagram"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="2" width="14" height="14" rx="4"/><circle cx="9" cy="9" r="3.2"/><circle cx="13" cy="5" r=".8" fill="currentColor"/></svg></a>
+          <a class="glass soc" href="#" aria-label="LinkedIn"><svg width="18" height="18" fill="currentColor"><path d="M4 7h2.4v8H4V7zm1.2-3.4a1.4 1.4 0 110 2.8 1.4 1.4 0 010-2.8zM8.4 7h2.3v1.1h.03c.32-.6 1.1-1.24 2.27-1.24 2.43 0 2.88 1.6 2.88 3.68V15h-2.4v-3.5c0-.83-.02-1.9-1.16-1.9-1.16 0-1.34.9-1.34 1.84V15H8.4V7z"/></svg></a>
+          <a class="glass soc" href="#" aria-label="Dribbble"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7.2"/><path d="M3 7c5 0 9 1 11.5 4M6 2.4C9 5 11 9 11.5 15.5M15.5 6C12 7 7 7 2 5.5"/></svg></a>
+        </div>
+        <a class="wa-btn" href="https://wa.me/10000000000" target="_blank" rel="noopener">
+          <svg width="20" height="20" fill="currentColor"><path d="M10 0a10 10 0 00-8.5 15.2L0 20l4.9-1.4A10 10 0 1010 0zm0 18.3a8.3 8.3 0 01-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.3 8.3 0 1110 18.3zm4.6-6.2c-.25-.13-1.5-.74-1.7-.82-.23-.08-.4-.13-.56.13-.17.25-.65.82-.8 1-.14.16-.29.18-.54.06a6.8 6.8 0 01-2-1.24 7.5 7.5 0 01-1.38-1.72c-.14-.25 0-.38.11-.5.11-.12.25-.29.37-.43.13-.15.17-.25.25-.42.08-.16.04-.31-.02-.43-.06-.13-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.48c-.16 0-.43.06-.65.31-.22.25-.85.84-.85 2.04 0 1.2.87 2.36 1 2.52.12.17 1.7 2.6 4.13 3.64.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.07 1.5-.61 1.71-1.2.21-.59.21-1.1.15-1.2-.06-.1-.23-.16-.48-.29z"/></svg>
+          Chat on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  <div class="wrap">
+    <div class="foot-top">
+      <div class="foot-brand">
+        <a class="brand" href="#hero"><span>Lumen<b>.</b>Studio</span></a>
+        <p>Modern websites for businesses, creators, and brands that want to stand out and be trusted online.</p>
+      </div>
+      <div class="foot-cols">
+        <div class="foot-col"><h5>Services</h5><a href="#services">Business Sites</a><a href="#services">Portfolios</a><a href="#services">Landing Pages</a><a href="#services">E-Commerce</a></div>
+        <div class="foot-col"><h5>Company</h5><a href="#why">Why Me</a><a href="#work">Work</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div>
+        <div class="foot-col"><h5>Connect</h5><a href="#contact">Contact</a><a href="https://wa.me/10000000000">WhatsApp</a><a href="#">Instagram</a><a href="#">LinkedIn</a></div>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Lumen Studio. Crafted with care.</span>
+      <span>Designed &amp; built end-to-end.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+// loader
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('done'),650)});
+
+// nav scroll
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>hdr.classList.toggle('scrolled',scrollY>30));
+
+// mobile menu
+const burger=document.getElementById('burger'),navLinks=document.getElementById('navLinks');
+burger.addEventListener('click',()=>navLinks.classList.toggle('mobile'));
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('mobile')));
+
+// reveal on scroll
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.14});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+// portfolio gradient thumbs
+document.querySelectorAll('.work').forEach(w=>{w.querySelector('.thumb').style.background=w.dataset.grad});
+
+// faq accordion
+document.querySelectorAll('.faq-item').forEach(item=>{
+  item.querySelector('.faq-q').addEventListener('click',()=>{
+    const open=item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));
+    if(!open)item.classList.add('open');
+  });
+});
+
+
+
+// subtle parallax on hero portrait
+const portrait=document.querySelector('.hero-portrait');
+addEventListener('mousemove',e=>{
+  if(!portrait)return;
+  const x=(e.clientX/innerWidth-.5)*18,y=(e.clientY/innerHeight-.5)*18;
+  portrait.style.transform=`translate(${x}px,${y}px)`;
+});
+</script>
+</body>
+</html>
