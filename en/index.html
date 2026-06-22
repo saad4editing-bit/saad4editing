@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Saad English | 儿童一对一英语教学 | 广州线下·全国线上</title>
+  <meta name="description" content="广州英语老师Saad提供专业儿童一对一英语教学，广州线下课程及全国线上英语课程，帮助孩子提高英语口语和自信。" />
+  <meta name="keywords" content="广州英语老师,儿童英语一对一,广州英语口语,线上英语教学,儿童英语培训" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #4A9FE0;Q
+      --blue-dark: #2C7FC5;
+      --blue-light: #EBF5FF;
+      --green: #5BBF8A;
+      --green-light: #E8F8F0;
+      --yellow: #FFD166;
+      --yellow-light: #FFF8E6;
+      --text: #1A2B4A;
+      --text-light: #5A6A82;
+      --white: #FAFCFF;
+      --card-bg: #FFFFFF;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --shadow: 0 8px 32px rgba(74,159,224,0.10);
+      --shadow-hover: 0 16px 48px rgba(74,159,224,0.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Noto Sans SC', 'Nunito', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 0 5%;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 68px;
+      background: rgba(250,252,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(74,159,224,0.10);
+      transition: box-shadow 0.3s;
+    }
+    nav.scrolled { box-shadow: 0 4px 20px rgba(74,159,224,0.12); }
+
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 18px; color: #fff;
+      letter-spacing: -1px;
+    }
+    .logo-text { line-height: 1.1; }
+    .logo-en { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 17px; color: var(--blue-dark); }
+    .logo-cn { font-size: 10px; color: var(--text-light); letter-spacing: 1px; }
+
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--text-light); font-size: 14px; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta {
+      background: var(--blue); color: #fff !important;
+      padding: 8px 20px; border-radius: 50px;
+      font-weight: 700 !important; font-size: 13px !important;
+      transition: background 0.2s, transform 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--blue-dark) !important; transform: translateY(-1px); }
+
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+    .hamburger span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 2px; transition: all 0.3s; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      padding: 100px 5% 60px;
+      display: flex; align-items: center;
+      background: linear-gradient(140deg, #EBF5FF 0%, #F0FAF5 50%, #FFF8E6 100%);
+      position: relative; overflow: hidden;
+    }
+
+    .orb {
+      position: absolute; border-radius: 50%; opacity: 0.35;
+      animation: float 8s ease-in-out infinite;
+      pointer-events: none;
+    }
+    .orb-1 { width: 400px; height: 400px; background: radial-gradient(circle, #4A9FE0, transparent); top: -80px; right: -80px; animation-delay: 0s; }
+    .orb-2 { width: 280px; height: 280px; background: radial-gradient(circle, #5BBF8A, transparent); bottom: 40px; right: 15%; animation-delay: 3s; }
+    .orb-3 { width: 180px; height: 180px; background: radial-gradient(circle, #FFD166, transparent); bottom: 20%; left: 5%; animation-delay: 5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-24px) scale(1.04); }
+    }
+
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    }
+
+    .hero-content { position: relative; z-index: 2; }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; border: 1px solid var(--blue-light);
+      border-radius: 50px; padding: 6px 16px; margin-bottom: 24px;
+      font-size: 13px; color: var(--blue); font-weight: 600;
+      box-shadow: 0 2px 12px rgba(74,159,224,0.12);
+    }
+    .hero-badge::before { content: '✦'; }
+
+    .hero h1 {
+      font-family: 'Noto Sans SC', sans-serif;
+      font-weight: 700; font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 1.25; color: var(--text); margin-bottom: 16px;
+    }
+    .hero h1 span { color: var(--blue); }
+
+    .hero-sub {
+      font-size: 16px; color: var(--blue); font-weight: 600;
+      margin-bottom: 20px; letter-spacing: 0.5px;
+    }
+
+    .hero-desc {
+      font-size: 15px; color: var(--text-light); line-height: 1.9;
+      margin-bottom: 36px;
+    }
+
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff; padding: 14px 28px; border-radius: 50px;
+      text-decoration: none; font-weight: 700; font-size: 15px;
+      box-shadow: 0 8px 24px rgba(74,159,224,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      display: inline-block;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(74,159,224,0.45); }
+
+    .btn-secondary {
+      background: #fff; color: var(--blue); padding: 14px 28px;
+      border-radius: 50px; border: 2px solid var(--blue-light);
+      text-decoration: none; font-weight: 700; font-size: 15px;
+      transition: border-color 0.2s, transform 0.2s;
+      display: inline-block;
+    }
+    .btn-secondary:hover { border-color: var(--blue); transform: translateY(-2px); }
+
+    .hero-visual { position: relative; z-index: 2; }
+    .hero-card {
+      background: #fff; border-radius: 28px;
+      padding: 40px 32px; box-shadow: var(--shadow-hover);
+      position: relative;
+    }
+    .hero-scene {
+      width: 100%; height: 280px; border-radius: 18px; overflow: hidden;
+      background: linear-gradient(140deg, #EBF5FF, #E8F8F0);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 24px; position: relative;
+    }
+
+    /* SVG teacher illustration */
+    .hero-scene svg { width: 100%; height: 100%; }
+
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;
+    }
+    .hero-stat {
+      background: var(--blue-light); border-radius: var(--radius-sm);
+      padding: 14px 10px; text-align: center;
+    }
+    .hero-stat-num { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 22px; color: var(--blue); display: block; }
+    .hero-stat-label { font-size: 11px; color: var(--text-light); }
+
+    /* Floating badge on hero card */
+    .badge-float {
+      position: absolute;
+      background: #fff; border-radius: 16px;
+      padding: 10px 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.10);
+      font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      animation: floatBadge 5s ease-in-out infinite;
+    }
+    @keyframes floatBadge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .badge-float.top-right { top: -16px; right: 24px; color: var(--green); animation-delay: 1s; }
+    .badge-float.bottom-left { bottom: -16px; left: 20px; color: var(--blue); animation-delay: 2.5s; }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 90px 5%; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      display: inline-block; background: var(--blue-light); color: var(--blue);
+      font-size: 12px; font-weight: 700; letter-spacing: 1.5px;
+      padding: 5px 14px; border-radius: 50px; margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+    .section-title {
+      font-weight: 700; font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      color: var(--text); margin-bottom: 14px; line-height: 1.3;
+    }
+    .section-subtitle { color: var(--text-light); font-size: 15px; max-width: 560px; }
+
+    .section-header { margin-bottom: 52px; }
+    .section-header.center { text-align: center; }
+    .section-header.center .section-subtitle { margin: 0 auto; }
+
+    /* Reveal animation */
+    .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ── ABOUT ── */
+    #about { background: #fff; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; align-items: center; }
+
+    .about-photo {
+      background: linear-gradient(140deg, var(--blue-light), var(--green-light));
+      border-radius: 28px; aspect-ratio: 3/4; overflow: hidden;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+
+    .about-photo svg { width: 85%; height: 85%; }
+
+    .about-text h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; margin-bottom: 20px; }
+    .about-text p { color: var(--text-light); font-size: 15px; line-height: 2; margin-bottom: 28px; }
+
+    .about-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      background: var(--blue-light); color: var(--blue-dark);
+      padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .chip.green { background: var(--green-light); color: #2E8A58; }
+    .chip.yellow { background: var(--yellow-light); color: #B8860B; }
+
+    /* ── WHY ── */
+    #why { background: linear-gradient(160deg, var(--blue-light) 0%, var(--white) 100%); }
+    .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+    .why-card {
+      background: #fff; border-radius: var(--radius); padding: 36px 28px;
+      box-shadow: var(--shadow); transition: transform 0.25s, box-shadow 0.25s;
+      border-top: 4px solid transparent;
+    }
+    .why-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+    .why-card:nth-child(1) { border-top-color: var(--blue); }
+    .why-card:nth-child(2) { border-top-color: var(--green); }
+    .why-card:nth-child(3) { border-top-color: var(--yellow); }
+    .why-card:nth-child(4) { border-top-color: #FF8C94; }
+
+    .why-icon {
+      width: 56px; height: 56px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; margin-bottom: 20px;
+    }
+    .why-card:nth-child(1) .why-icon { background: var(--blue-light); }
+    .why-card:nth-child(2) .why-icon { background: var(--green-light); }
+    .why-card:nth-child(3) .why-icon { background: var(--yellow-light); }
+    .why-card:nth-child(4) .why-icon { background: #FFE8EA; }
+
+    .why-card h3 { font-size: 17px; font-weight: 700; margin-bottom: 10px; }
+    .why-card p { font-size: 14px; color: var(--text-light); line-height: 1.8; }
+
+    /* ── COURSES ── */
+    #courses { background: #fff; }
+    .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+    .course-card {
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); transition: transform 0.25s, box-shadow 0.25s;
+      position: relative;
+    }
+    .course-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+    .course-header {
+      padding: 32px 28px 24px;
+      position: relative;
+    }
+    .course-card:nth-child(1) .course-header { background: linear-gradient(135deg, #4A9FE0, #2C7FC5); }
+    .course-card:nth-child(2) .course-header { background: linear-gradient(135deg, #5BBF8A, #3A9A68); }
+    .course-card:nth-child(3) .course-header { background: linear-gradient(135deg, #FFD166, #E8A500); }
+
+    .course-age {
+      display: inline-block; background: rgba(255,255,255,0.25);
+      color: #fff; font-size: 12px; font-weight: 700;
+      padding: 4px 12px; border-radius: 50px; margin-bottom: 12px;
+    }
+    .course-header h3 { font-size: 20px; font-weight: 700; color: #fff; }
+    .course-header-icon { position: absolute; right: 24px; top: 24px; font-size: 36px; opacity: 0.7; }
+
+    .course-body { background: #fff; padding: 24px 28px; }
+    .course-list { list-style: none; }
+    .course-list li {
+      padding: 8px 0; font-size: 14px; color: var(--text-light);
+      border-bottom: 1px solid #F0F4F8;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .course-list li::before { content: '✓'; color: var(--green); font-weight: 700; }
+    .course-list li:last-child { border-bottom: none; }
+
+    /* ── METHOD ── */
+    #method { background: linear-gradient(160deg, var(--green-light) 0%, var(--white) 100%); }
+    .method-timeline { position: relative; max-width: 680px; margin: 0 auto; }
+    .method-timeline::before {
+      content: ''; position: absolute; left: 28px; top: 8px; bottom: 8px;
+      width: 3px; background: linear-gradient(to bottom, var(--blue), var(--green));
+      border-radius: 3px;
+    }
+
+    .method-step { display: flex; gap: 28px; margin-bottom: 40px; position: relative; }
+    .step-dot {
+      width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 20px;
+      color: #fff; position: relative; z-index: 2;
+      box-shadow: 0 4px 16px rgba(74,159,224,0.3);
+    }
+    .step-dot.s1 { background: linear-gradient(135deg, var(--blue), #60B4F0); }
+    .step-dot.s2 { background: linear-gradient(135deg, var(--green), #7DD4A5); }
+    .step-dot.s3 { background: linear-gradient(135deg, #FF8C94, #FFB3BA); }
+    .step-dot.s4 { background: linear-gradient(135deg, var(--yellow), #FFE080); }
+
+    .step-content { padding-top: 12px; }
+    .step-content h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+    .step-content p { font-size: 14px; color: var(--text-light); line-height: 1.8; }
+
+    /* ── LESSON MODES ── */
+    #modes { background: #fff; }
+    .modes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .mode-card {
+      border-radius: var(--radius); overflow: hidden;
+      box-shadow: var(--shadow); transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .mode-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+
+    .mode-visual {
+      height: 220px; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .mode-card:nth-child(1) .mode-visual { background: linear-gradient(135deg, #EBF5FF, #D4EBFF); }
+    .mode-card:nth-child(2) .mode-visual { background: linear-gradient(135deg, #E8F8F0, #D0F0E0); }
+
+    .mode-visual svg { width: 80%; height: 80%; }
+
+    .mode-body { background: #fff; padding: 28px; }
+    .mode-body h3 { font-size: 19px; font-weight: 700; margin-bottom: 6px; }
+    .mode-body .mode-tag { font-size: 13px; color: var(--blue); font-weight: 600; margin-bottom: 14px; }
+    .mode-body ul { list-style: none; }
+    .mode-body ul li { font-size: 14px; color: var(--text-light); padding: 5px 0; display: flex; align-items: center; gap: 8px; }
+    .mode-body ul li::before { content: '→'; color: var(--green); font-weight: 700; }
+
+    /* ── REVIEWS ── */
+    #reviews { background: linear-gradient(160deg, var(--yellow-light) 0%, var(--white) 100%); }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .review-card {
+      background: #fff; border-radius: var(--radius); padding: 32px 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .review-card::before {
+      content: '"'; font-family: 'Nunito', sans-serif; font-size: 80px;
+      color: var(--blue-light); line-height: 1; position: absolute;
+      top: 12px; left: 20px; font-weight: 900;
+    }
+    .review-text { font-size: 15px; line-height: 2; color: var(--text); margin-bottom: 20px; padding-top: 24px; }
+    .review-author { display: flex; align-items: center; gap: 12px; }
+    .review-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700;
+    }
+    .review-avatar.a1 { background: var(--blue-light); color: var(--blue); }
+    .review-avatar.a2 { background: var(--green-light); color: var(--green); }
+    .review-avatar.a3 { background: var(--yellow-light); color: #B8860B; }
+    .review-name { font-size: 14px; font-weight: 700; color: var(--text); }
+    .review-label { font-size: 12px; color: var(--text-light); }
+    .stars { color: var(--yellow); font-size: 14px; margin-bottom: 12px; }
+
+    /* ── PRICING ── */
+    #pricing { background: #fff; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+    .pricing-card {
+      border-radius: var(--radius); padding: 36px 28px;
+      box-shadow: var(--shadow); text-align: center;
+      border: 2px solid transparent; transition: all 0.25s;
+      position: relative;
+    }
+    .pricing-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-hover); }
+
+    .pricing-card.featured {
+      border-color: var(--blue);
+      background: linear-gradient(160deg, #EBF5FF 0%, #fff 100%);
+    }
+    .pricing-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--blue); color: #fff;
+      font-size: 12px; font-weight: 700; padding: 4px 18px; border-radius: 50px;
+      white-space: nowrap;
+    }
+    .pricing-icon { font-size: 40px; margin-bottom: 16px; }
+    .pricing-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .pricing-card .en-title { font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text-light); margin-bottom: 20px; }
+    .pricing-card p { font-size: 14px; color: var(--text-light); line-height: 1.9; margin-bottom: 28px; }
+    .pricing-btn {
+      display: block; width: 100%;
+      padding: 13px 0; border-radius: 50px; font-size: 15px; font-weight: 700;
+      text-decoration: none; transition: all 0.2s; cursor: pointer;
+      border: none; font-family: inherit;
+    }
+    .pricing-btn.primary { background: var(--blue); color: #fff; box-shadow: 0 6px 20px rgba(74,159,224,0.3); }
+    .pricing-btn.primary:hover { background: var(--blue-dark); }
+    .pricing-btn.outline { border: 2px solid var(--blue); color: var(--blue); background: transparent; }
+    .pricing-btn.outline:hover { background: var(--blue-light); }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: linear-gradient(135deg, #1A2B4A 0%, #2C4470 100%);
+      padding: 90px 5%;
+    }
+    .contact-inner { max-width: 1100px; margin: 0 auto; }
+    #contact .section-tag { background: rgba(255,255,255,0.15); color: rgba(255,255,255,0.9); }
+    #contact .section-title { color: #fff; }
+    #contact .section-subtitle { color: rgba(255,255,255,0.7); }
+
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .contact-methods { display: flex; flex-direction: column; gap: 16px; margin-top: 32px; }
+    .contact-btn {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius-sm); padding: 16px 20px;
+      text-decoration: none; color: #fff;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .contact-btn:hover { background: rgba(255,255,255,0.18); transform: translateX(4px); }
+    .contact-btn .cb-icon { font-size: 22px; }
+    .contact-btn .cb-text { flex: 1; }
+    .contact-btn .cb-label { font-size: 12px; opacity: 0.7; display: block; }
+    .contact-btn .cb-main { font-size: 15px; font-weight: 700; display: block; }
+    .cb-arrow { opacity: 0.5; }
+
+    .contact-btn.wechat { background: rgba(91,191,138,0.25); border-color: rgba(91,191,138,0.4); }
+
+    .qr-box {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: var(--radius); padding: 32px;
+      display: flex; flex-direction: column; align-items: center; gap: 16px;
+    }
+    .qr-placeholder {
+      width: 160px; height: 160px; background: #fff; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 8px;
+    }
+    .qr-placeholder svg { width: 80px; height: 80px; }
+    .qr-placeholder span { font-size: 11px; color: var(--text-light); }
+    .qr-box p { color: rgba(255,255,255,0.8); font-size: 14px; text-align: center; line-height: 1.7; }
+    .qr-label { font-size: 16px; font-weight: 700; color: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #0F1A2E; padding: 40px 5%;
+      text-align: center; color: rgba(255,255,255,0.5);
+    }
+    .footer-logo { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 20px; color: #fff; margin-bottom: 4px; }
+    .footer-sub { font-size: 13px; margin-bottom: 12px; }
+    .footer-links { display: flex; gap: 20px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+    .footer-links a { color: rgba(255,255,255,0.5); text-decoration: none; font-size: 13px; transition: color 0.2s; }
+    .footer-links a:hover { color: var(--blue); }
+    .footer-copy { font-size: 12px; }
+
+    /* ── FLOATING CTA ── */
+    .float-cta {
+      position: fixed; bottom: 28px; right: 28px; z-index: 99;
+      background: linear-gradient(135deg, var(--green), #3A9A68);
+      color: #fff; border-radius: 50px; padding: 14px 24px;
+      font-size: 14px; font-weight: 700; text-decoration: none;
+      box-shadow: 0 8px 28px rgba(91,191,138,0.45);
+      display: flex; align-items: center; gap: 8px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: pulseCTA 3s ease-in-out infinite;
+    }
+    @keyframes pulseCTA {
+      0%, 100% { box-shadow: 0 8px 28px rgba(91,191,138,0.45); }
+      50% { box-shadow: 0 12px 40px rgba(91,191,138,0.65); }
+    }
+    .float-cta:hover { transform: translateY(-3px); }
+
+    /* ── RESPONSIVE: TABLET ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 32px; }
+      .hero-visual { order: -1; }
+      .hero-card { padding: 24px 20px; }
+      .about-grid { grid-template-columns: 1fr; gap: 32px; }
+      .about-photo { aspect-ratio: 4/5; max-height: 480px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+      .modes-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── RESPONSIVE: MOBILE ── */
+    @media (max-width: 680px) {
+      /* Nav */
+      nav { padding: 0 5%; height: 60px; }
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex; flex-direction: column;
+        position: absolute; top: 60px; left: 0; right: 0;
+        background: rgba(250,252,255,0.98);
+        backdrop-filter: blur(12px);
+        padding: 16px 5% 20px;
+        border-bottom: 1px solid rgba(74,159,224,0.12);
+        gap: 4px; z-index: 200;
+        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      }
+      .nav-links.open li a {
+        display: block; padding: 12px 0;
+        font-size: 16px; border-bottom: 1px solid rgba(74,159,224,0.08);
+        color: var(--text);
+      }
+      .nav-links.open li:last-child a { border-bottom: none; }
+      .nav-cta { display: inline-block !important; margin-top: 8px; text-align: center; padding: 12px 0 !important; }
+      .hamburger { display: flex; }
+
+      /* Global section spacing */
+      section { padding: 52px 5%; }
+      .section-title { font-size: 1.55rem; }
+      .section-header { margin-bottom: 36px; }
+
+      /* Hero */
+      .hero { padding: 76px 5% 44px; min-height: auto; }
+      .hero-inner { gap: 24px; }
+      .hero-badge { font-size: 11px; padding: 5px 12px; }
+      .hero h1 { font-size: 2rem; }
+      .hero-sub { font-size: 14px; }
+      .hero-desc { font-size: 14px; margin-bottom: 24px; }
+      .hero-btns { flex-direction: column; gap: 10px; }
+      .btn-primary, .btn-secondary { text-align: center; padding: 14px 20px; font-size: 14px; width: 100%; }
+      .hero-card { padding: 16px 14px; border-radius: 20px; }
+      .hero-scene { height: 220px; margin-bottom: 14px; border-radius: 14px; }
+      .hero-stats { gap: 8px; }
+      .hero-stat { padding: 10px 6px; border-radius: 10px; }
+      .hero-stat-num { font-size: 18px; }
+      .hero-stat-label { font-size: 10px; }
+      .badge-float { display: none; }
+      .orb-1 { width: 220px; height: 220px; }
+      .orb-2 { width: 160px; height: 160px; }
+      .orb-3 { width: 100px; height: 100px; }
+
+      /* About */
+      #about { padding: 52px 5%; }
+      .about-photo { aspect-ratio: 3/4; max-height: 420px; border-radius: 20px; }
+      .about-chips { gap: 8px; }
+      .chip { font-size: 12px; padding: 6px 14px; }
+      .about-text p { font-size: 14px; }
+
+      /* Why cards */
+      .why-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .why-card { padding: 22px 18px; }
+      .why-icon { width: 44px; height: 44px; font-size: 20px; margin-bottom: 12px; border-radius: 12px; }
+      .why-card h3 { font-size: 14px; }
+      .why-card p { font-size: 13px; }
+
+      /* Courses */
+      .courses-grid { grid-template-columns: 1fr; gap: 16px; }
+      .course-header { padding: 24px 20px 18px; }
+      .course-body { padding: 18px 20px; }
+
+      /* Method timeline */
+      .method-timeline::before { left: 22px; }
+      .step-dot { width: 44px; height: 44px; font-size: 17px; flex-shrink: 0; }
+      .method-step { gap: 18px; margin-bottom: 28px; }
+      .step-content h3 { font-size: 16px; }
+      .step-content p { font-size: 13px; }
+
+      /* Modes */
+      .modes-grid { gap: 16px; }
+      .mode-visual { height: 200px; }
+      .mode-body { padding: 20px; }
+      .mode-body h3 { font-size: 17px; }
+
+      /* Pricing */
+      #pricing .section-inner { padding: 0; }
+
+      /* Contact */
+      #contact { padding: 52px 5%; }
+      .contact-grid { gap: 28px; }
+      .contact-methods { margin-top: 20px; gap: 12px; }
+      .contact-btn { padding: 14px 16px; }
+      .contact-btn .cb-main { font-size: 14px; }
+      .qr-box { padding: 24px 20px; }
+      .qr-box .qr-placeholder { width: 150px !important; height: 150px !important; }
+
+      /* Footer */
+      footer { padding: 32px 5%; }
+      .footer-links { gap: 14px; }
+
+      /* Float CTA */
+      .float-cta { bottom: 20px; right: 16px; padding: 13px 18px; font-size: 13px; }
+    }
+
+    /* Extra small phones */
+    @media (max-width: 380px) {
+      .hero h1 { font-size: 1.75rem; }
+      .why-grid { grid-template-columns: 1fr; }
+      .hero-scene { height: 190px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">
+    <img src="https://ik.imagekit.io/hdpxwt16f/ENGLISH/logo.png?updatedAt=1782106566198" alt="Saad English Logo" style="height:44px; width:auto; display:block;" />
+  </a>
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#about">关于我</a></li>
+    <li><a href="#courses">课程</a></li>
+    <li><a href="#method">教学方式</a></li>
+    <li><a href="#contact" class="nav-cta">预约试听</a></li>
+  </ul>
+  <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="hero-inner">
+    <div class="hero-content reveal">
+      <div class="hero-badge">广州线下 · 全国线上 · 专业英语教学</div>
+      <h1>让孩子<span>自信</span>开口说英语</h1>
+      <p class="hero-sub">广州线下 + 全国线上 | 一对一英语陪伴式教学</p>
+      <p class="hero-desc">
+        你好，我是Saad。一名来自广州的英语老师。<br />
+        我提供专业、有趣、适合儿童的一对一英语课程，<br />
+        帮助孩子提高口语、自信和英语兴趣。
+      </p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-primary">🎯 预约试听课程</a>
+        <a href="#method" class="btn-secondary">了解我的教学方式</a>
+      </div>
+    </div>
+    <div class="hero-visual reveal reveal-delay-2">
+      <div class="hero-card">
+        <div class="badge-float top-right">🌟 一对一专属</div>
+        <div class="hero-scene" style="overflow:hidden; padding:0;">
+          <img src="https://ik.imagekit.io/hdpxwt16f/ENGLISH/1.jpg?updatedAt=1782106566168" alt="Saad老师与孩子一对一英语课" style="width:100%; height:100%; object-fit:cover; border-radius:18px;" />
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <span class="hero-stat-num">3-12</span>
+            <span class="hero-stat-label">适合年龄</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">1对1</span>
+            <span class="hero-stat-label">专属课程</span>
+          </div>
+          <div class="hero-stat">
+            <span class="hero-stat-num">双语</span>
+            <span class="hero-stat-label">英法流利</span>
+          </div>
+        </div>
+        <div class="badge-float bottom-left">📍 广州 + 全国线上</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-photo reveal" style="overflow:hidden; padding:16px; background:linear-gradient(140deg,var(--blue-light),var(--green-light)); display:flex; align-items:center; justify-content:center;">
+        <img src="https://ik.imagekit.io/hdpxwt16f/ENGLISH/2.png?updatedAt=1782106566223" alt="Saad老师" style="width:100%; height:100%; object-fit:contain; border-radius:16px; display:block;" />
+      </div>
+      <div class="about-text reveal reveal-delay-2">
+        <span class="section-tag">关于我</span>
+        <h2 class="section-title">关于Saad老师</h2>
+        <p>你好，我是Saad。我今年20岁，目前生活在广州。我喜欢和孩子交流，也喜欢帮助学生发现学习英语的乐趣。</p>
+        <p>我可以使用英语和法语进行交流，并通过简单、有趣的方法帮助孩子建立英语表达能力。我的目标不是让孩子死记单词，而是让他们真正<strong>敢说英语</strong>。</p>
+        <div class="about-chips">
+          <span class="chip">🇬🇧 英语流利</span>
+          <span class="chip green">🇫🇷 法语交流</span>
+          <span class="chip yellow">👤 一对一教学</span>
+          <span class="chip">📍 广州线下教学</span>
+          <span class="chip green">💻 全国线上课程</span>
+          <span class="chip yellow">❤️ 耐心友善</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section id="why">
+  <div class="section-inner">
+    <div class="section-header center reveal">
+      <span class="section-tag">选择理由</span>
+      <h2 class="section-title">为什么选择一对一英语课程？</h2>
+      <p class="section-subtitle">专注孩子个人成长，让每节课都值得期待</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="why-icon">💬</div>
+        <h3>提高口语能力</h3>
+        <p>更多真实英语交流，帮助孩子敢于表达，不再害怕开口说英语。</p>
+      </div>
+      <div class="why-card reveal reveal-delay-1">
+        <div class="why-icon">🌱</div>
+        <h3>适合孩子学习</h3>
+        <p>根据孩子年龄和水平，制定个性化课程，循序渐进，轻松上手。</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <div class="why-icon">😄</div>
+        <h3>轻松快乐学习</h3>
+        <p>通过游戏、故事和互动，让英语学习变得有趣，孩子主动爱学。</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <div class="why-icon">🎯</div>
+        <h3>提升学习兴趣</h3>
+        <p>培养孩子长期学习英语的动力，建立真正的英语兴趣和自信心。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COURSES -->
+<section id="courses">
+  <div class="section-inner">
+    <div class="section-header center reveal">
+      <span class="section-tag">课程内容</span>
+      <h2 class="section-title">课程内容</h2>
+      <p class="section-subtitle">根据孩子的年龄和水平，选择最适合的课程</p>
+    </div>
+    <div class="courses-grid">
+      <div class="course-card reveal">
+        <div class="course-header">
+          <span class="course-age">3 - 7 岁</span>
+          <div class="course-header-icon">🌈</div>
+          <h3>儿童英语启蒙</h3>
+        </div>
+        <div class="course-body">
+          <ul class="course-list">
+            <li>基础词汇积累</li>
+            <li>简单日常对话</li>
+            <li>英语兴趣培养</li>
+            <li>正确发音练习</li>
+          </ul>
+        </div>
+      </div>
+      <div class="course-card reveal reveal-delay-1">
+        <div class="course-header">
+          <span class="course-age">7 - 12 岁</span>
+          <div class="course-header-icon">📚</div>
+          <h3>小学英语提升</h3>
+        </div>
+        <div class="course-body">
+          <ul class="course-list">
+            <li>口语训练强化</li>
+            <li>阅读理解提升</li>
+            <li>日常交流对话</li>
+            <li>英语表达能力</li>
+          </ul>
+        </div>
+      </div>
+      <div class="course-card reveal reveal-delay-2">
+        <div class="course-header">
+          <span class="course-age">全年龄适合</span>
+          <div class="course-header-icon">🗣️</div>
+          <h3>英语口语陪练</h3>
+        </div>
+        <div class="course-body">
+          <ul class="course-list">
+            <li>真实对话练习</li>
+            <li>提高表达自信</li>
+            <li>发音纠正指导</li>
+            <li>英语环境沉浸</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section id="method">
+  <div class="section-inner">
+    <div class="section-header center reveal">
+      <span class="section-tag">教学方式</span>
+      <h2 class="section-title">我的教学方式</h2>
+      <p class="section-subtitle">每个孩子都是独特的，我的方法也因人而异</p>
+    </div>
+    <div class="method-timeline">
+      <div class="method-step reveal">
+        <div class="step-dot s1">1</div>
+        <div class="step-content">
+          <h3>了解孩子水平</h3>
+          <p>第一次课程了解孩子英语基础和学习目标，建立轻松愉快的交流氛围。</p>
+        </div>
+      </div>
+      <div class="method-step reveal reveal-delay-1">
+        <div class="step-dot s2">2</div>
+        <div class="step-content">
+          <h3>制定学习计划</h3>
+          <p>根据孩子情况量身调整课程内容，确保每节课都有明确收获。</p>
+        </div>
+      </div>
+      <div class="method-step reveal reveal-delay-2">
+        <div class="step-dot s3">3</div>
+        <div class="step-content">
+          <h3>互动学习</h3>
+          <p>通过聊天、游戏、故事和角色扮演提高英语能力，让学习充满乐趣。</p>
+        </div>
+      </div>
+      <div class="method-step reveal reveal-delay-3">
+        <div class="step-dot s4">4</div>
+        <div class="step-content">
+          <h3>持续进步</h3>
+          <p>帮助孩子建立英语自信，培养长期学习的热情和良好学习习惯。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LESSON MODES -->
+<section id="modes">
+  <div class="section-inner">
+    <div class="section-header center reveal">
+      <span class="section-tag">学习方式</span>
+      <h2 class="section-title">学习方式</h2>
+      <p class="section-subtitle">线下面对面或线上视频，都能获得优质的一对一教学</p>
+    </div>
+    <div class="modes-grid">
+      <div class="mode-card reveal">
+        <div class="mode-visual" style="overflow:hidden; padding:0;">
+          <img src="https://ik.imagekit.io/hdpxwt16f/ENGLISH/3.png?updatedAt=1782106566289" alt="广州线下一对一英语课" style="width:100%; height:100%; object-fit:cover; display:block;" />
+        </div>
+        <div class="mode-body">
+          <h3>广州线下一对一</h3>
+          <p class="mode-tag">📍 广州市内 · 面对面教学</p>
+          <ul>
+            <li>面对面沉浸式交流</li>
+            <li>更好的互动体验</li>
+            <li>适合广州附近家庭</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mode-card reveal reveal-delay-2">
+        <div class="mode-visual" style="overflow:hidden; padding:0;">
+          <img src="https://ik.imagekit.io/hdpxwt16f/ENGLISH/4.png?updatedAt=1782106566286" alt="全国线上英语课程" style="width:100%; height:100%; object-fit:cover; display:block;" />
+        </div>
+        <div class="mode-body">
+          <h3>全国线上课程</h3>
+          <p class="mode-tag">💻 视频课程 · 全国可上</p>
+          <ul>
+            <li>无需出门，在家学习</li>
+            <li>时间灵活自由安排</li>
+            <li>中国各地区均可参加</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-inner">
+    <div class="section-header center reveal">
+      <span class="section-tag">课程价格</span>
+      <h2 class="section-title">课程价格</h2>
+      <p class="section-subtitle">透明公开，欢迎咨询，先试听再决定</p>
+    </div>
+    <div style="display:flex; justify-content:center;">
+      <div class="pricing-card featured reveal" style="max-width:420px; width:100%;">
+        <div class="pricing-icon">📚</div>
+        <h3>一对一英语课程</h3>
+        <p class="en-title">Private English Lesson</p>
+        <div style="margin: 20px 0 8px;">
+          <span style="font-family:'Nunito',sans-serif; font-size:52px; font-weight:900; color:var(--blue); line-height:1;">150</span>
+          <span style="font-size:20px; font-weight:700; color:var(--blue);"> 元</span>
+          <span style="font-size:15px; color:var(--text-light);"> / 小时</span>
+        </div>
+        <p style="margin-bottom:28px;">广州线下 · 全国线上<br/>适合所有年龄段<br/>一对一专属教学</p>
+        <a href="#contact" class="pricing-btn primary">立即预约</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="section-header reveal">
+      <span class="section-tag">联系我</span>
+      <h2 class="section-title">开始孩子的英语学习之旅</h2>
+      <p class="section-subtitle">欢迎家长联系我，一起帮助孩子建立英语自信。</p>
+    </div>
+    <div class="contact-grid">
+      <div class="reveal">
+        <div class="contact-methods">
+          <a href="weixin://dl/chat?saadazzabi" class="contact-btn wechat">
+            <span class="cb-icon">💬</span>
+            <span class="cb-text">
+              <span class="cb-label">微信 WeChat</span>
+              <span class="cb-main">saadazzabi</span>
+            </span>
+            <span class="cb-arrow">→</span>
+          </a>
+          <a href="tel:+8618379170038" class="contact-btn">
+            <span class="cb-icon">📞</span>
+            <span class="cb-text">
+              <span class="cb-label">电话联系</span>
+              <span class="cb-main">+86 183 7917 0038</span>
+            </span>
+            <span class="cb-arrow">→</span>
+          </a>
+        </div>
+      </div>
+      <div class="qr-box reveal reveal-delay-2">
+        <p class="qr-label">扫描添加微信</p>
+        <div class="qr-placeholder" style="background:none; width:180px; height:180px; padding:0; border-radius:16px; overflow:hidden;">
+          <img src="https://ik.imagekit.io/hdpxwt16f/ENGLISH/wechat%20QR.jpeg?updatedAt=1782106566192" alt="Saad微信二维码" style="width:100%; height:100%; object-fit:cover; display:block; border-radius:16px;" />
+        </div>
+        <p>扫描二维码，直接加我微信咨询<br/>微信号：<strong style="color:#fff;">saadazzabi</strong> 😊</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Saad English</div>
+  <div class="footer-sub">儿童一对一英语教学 | 广州线下 · 全国线上</div>
+  <div class="footer-links">
+    <a href="#home">首页</a>
+    <a href="#about">关于我</a>
+    <a href="#courses">课程</a>
+    <a href="#method">教学方式</a>
+    <a href="#contact">联系我</a>
+  </div>
+  <div class="footer-copy">© 2026 Saad English · 让每个孩子自信说英语</div>
+</footer>
+
+<!-- FLOATING CTA -->
+<a href="#contact" class="float-cta">
+  <span>💬</span>
+  <span class="cta-text">免费试听</span>
+</a>
+
+<script>
+  // Nav scroll effect
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  // Hamburger menu
+  function toggleMenu() {
+    document.getElementById('navLinks').classList.toggle('open');
+  }
+
+  // Close menu on link click
+  document.querySelectorAll('.nav-links a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('navLinks').classList.remove('open');
+    });
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Respect reduced motion
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.orb, .badge-float, .float-cta').forEach(el => {
+      el.style.animation = 'none';
+    });
+    reveals.forEach(el => {
+      el.style.transition = 'none';
+      el.classList.add('visible');
+    });
+  }
+</script>
+</body>
+</html>
