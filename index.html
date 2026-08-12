@@ -418,6 +418,112 @@
   .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
   .faq-answer-inner { padding: 0 0 28px; font-size: 14px; line-height: 1.85; color: var(--text-dim); font-weight: 300; }
 
+  /* PORTFOLIO */
+  #portfolio { background: var(--dark2); }
+  .portfolio-desc { font-size: 15px; line-height: 1.8; color: var(--text-dim); font-weight: 300; max-width: 480px; margin-top: 22px; }
+  .portfolio-tabs { display: flex; gap: 36px; margin-top: 56px; border-bottom: 1px solid var(--border-dim); flex-wrap: wrap; }
+  .portfolio-tab {
+    background: none; border: none; cursor: none; color: var(--text-dim);
+    font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 400; padding: 0 0 18px; position: relative; transition: color 0.3s;
+  }
+  .portfolio-tab::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px;
+    background: var(--gold); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease;
+  }
+  .portfolio-tab:hover { color: var(--gold-light); }
+  .portfolio-tab.active { color: var(--text); }
+  .portfolio-tab.active::after { transform: scaleX(1); }
+
+  .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 22px; margin-top: 48px; }
+  .portfolio-grid.scroll-mode {
+    overflow-y: auto; padding-right: 10px; transition: max-height 0.35s ease;
+    scrollbar-width: thin; scrollbar-color: var(--gold) var(--dark3);
+  }
+  .portfolio-grid.scroll-mode::-webkit-scrollbar { width: 6px; }
+  .portfolio-grid.scroll-mode::-webkit-scrollbar-track { background: var(--dark3); }
+  .portfolio-grid.scroll-mode::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+  .portfolio-grid.scroll-mode::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
+  .portfolio-card {
+    position: relative; display: block; aspect-ratio: 3 / 4; border-radius: 12px;
+    overflow: hidden; background: var(--dark3); border: 1px solid var(--border-dim);
+    text-decoration: none; cursor: none; transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+  }
+  .portfolio-card:hover { transform: translateY(-6px); border-color: var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+  .portfolio-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+  .portfolio-card:hover img { transform: scale(1.07); }
+  .portfolio-card::before {
+    content: ''; position: absolute; inset: 0; z-index: 1;
+    background: linear-gradient(to top, rgba(10,8,1,0.92) 0%, rgba(10,8,1,0.15) 42%, transparent 62%);
+  }
+  .portfolio-play {
+    position: absolute; top: 14px; left: 14px; width: 34px; height: 34px; border-radius: 50%;
+    background: rgba(10,8,1,0.55); border: 1px solid var(--border); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center; z-index: 2; transition: all 0.3s;
+  }
+  .portfolio-card:hover .portfolio-play { background: var(--gold); border-color: var(--gold); }
+  .portfolio-play svg { width: 11px; height: 11px; fill: var(--text); margin-left: 2px; transition: fill 0.3s; }
+  .portfolio-card:hover .portfolio-play svg { fill: var(--dark); }
+  .portfolio-tag {
+    position: absolute; top: 14px; right: 14px; z-index: 2;
+    font-size: 9px; letter-spacing: 1.5px; text-transform: uppercase; font-weight: 500;
+    color: var(--gold-light); background: rgba(10,8,1,0.55); border: 1px solid var(--border);
+    padding: 4px 10px; border-radius: 20px; backdrop-filter: blur(6px);
+  }
+  .portfolio-label {
+    position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 2;
+    font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 500; color: var(--text);
+    letter-spacing: 0.3px;
+  }
+  .portfolio-card.hide { display: none; }
+
+  .portfolio-more-wrap { display: flex; justify-content: center; margin-top: 48px; }
+  .portfolio-more-btn {
+    background: transparent; border: 1px solid var(--gold); color: var(--gold-light);
+    padding: 14px 40px; font-family: 'Outfit', sans-serif; font-size: 12px;
+    font-weight: 500; letter-spacing: 2px; text-transform: uppercase;
+    cursor: none; transition: all 0.3s; position: relative; overflow: hidden;
+  }
+  .portfolio-more-btn::before {
+    content: ''; position: absolute; inset: 0; background: var(--gold);
+    transform: translateX(-100%); transition: transform 0.3s ease; z-index: 0;
+  }
+  .portfolio-more-btn:hover::before { transform: translateX(0); }
+  .portfolio-more-btn:hover { color: var(--dark); }
+  .portfolio-more-btn span { position: relative; z-index: 1; }
+
+  /* VIDEO PLAYER MODAL */
+  .video-modal-overlay {
+    position: fixed; inset: 0; background: rgba(5,4,0,0.92);
+    z-index: 600; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    backdrop-filter: blur(6px); padding: 40px 20px;
+  }
+  .video-modal-overlay.open { opacity: 1; pointer-events: all; }
+  .video-modal-wrap {
+    position: relative; width: 100%; max-width: 380px;
+    transform: translateY(24px); transition: transform 0.35s ease;
+  }
+  .video-modal-overlay.open .video-modal-wrap { transform: translateY(0); }
+  .video-modal-box {
+    position: relative; width: 100%;
+    aspect-ratio: 9 / 16; background: var(--dark3); border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .video-modal-box iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .video-modal-close {
+    position: absolute; top: -44px; right: 0; font-size: 28px; color: var(--text);
+    background: none; border: none; cursor: none; line-height: 1; transition: color 0.2s;
+  }
+  .video-modal-close:hover { color: var(--gold-light); }
+  .video-modal-fallback {
+    display: block; text-align: center; margin-top: 14px;
+    font-family: 'Outfit', sans-serif; font-size: 12px; letter-spacing: 0.5px;
+    color: var(--text-faint); text-decoration: none; transition: color 0.2s;
+  }
+  .video-modal-fallback:hover { color: var(--gold-light); }
+  .video-modal-fallback span { color: var(--gold-light); text-decoration: underline; }
+
   /* CONTACT */
   #contact { background: var(--dark2); position: relative; overflow: hidden; }
   #contact::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 60% 50% at 50% 100%, rgba(201,153,42,0.05) 0%, transparent 70%); pointer-events: none; }
@@ -553,6 +659,17 @@
     /* FAQ */
     .faq-list { max-width: 100%; }
 
+    /* PORTFOLIO */
+    .portfolio-tabs { gap: 22px; margin-top: 36px; }
+    .portfolio-tab { font-size: 11px; padding-bottom: 12px; }
+    .portfolio-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 32px; }
+    .portfolio-label { font-size: 12px; }
+    .portfolio-play { width: 28px; height: 28px; top: 10px; left: 10px; }
+    .portfolio-tag { top: 10px; right: 10px; font-size: 9px; padding: 3px 8px; }
+    .video-modal-wrap { max-width: 300px; }
+    .video-modal-close { top: -40px; font-size: 24px; }
+    .portfolio-more-btn { padding: 12px 30px; }
+
     /* FOOTER */
     footer { flex-direction: column; gap: 20px; text-align: center; padding: 36px 20px; }
     footer img { height: 34px !important; }
@@ -582,6 +699,7 @@
   <a href="#hero" class="nav-logo"><img src="logo without background.png" alt="saad4editing" class="nav-logo-img"><span class="nav-logo-text">saad<em>4editing</em></span></a>
   <ul class="nav-links">
     <li><a href="#clients">Work</a></li>
+    <li><a href="#portfolio">Videos</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#results">Results</a></li>
     <li><a href="#process">Process</a></li>
@@ -651,6 +769,25 @@
     <button class="carousel-nav-btn" id="c-prev" aria-label="Previous">&#8592;</button>
     <span class="carousel-counter" id="c-counter">01 / 09</span>
     <button class="carousel-nav-btn" id="c-next" aria-label="Next">&#8594;</button>
+  </div>
+</section>
+
+<!-- ===================== VIDEO PORTFOLIO ===================== -->
+<section id="portfolio">
+  <div class="section-label reveal"><div class="section-label-line"></div><span class="section-label-text">Recent Work</span></div>
+  <h2 class="section-title reveal">EDITED<br>VIDEOS</h2>
+  <p class="portfolio-desc reveal">A selection of the shorts, ads &amp; social content I've edited — filter by category to explore.</p>
+
+  <div class="portfolio-tabs reveal" id="portfolio-tabs">
+    <!-- Tabs rendered by JS from VIDEOS_DATA -->
+  </div>
+
+  <div class="portfolio-grid" id="portfolio-grid">
+    <!-- Cards rendered by JS from VIDEO_GROUPS -->
+  </div>
+
+  <div class="portfolio-more-wrap" id="portfolio-more-wrap">
+    <button class="portfolio-more-btn" id="portfolio-more-btn"><span>Show More</span></button>
   </div>
 </section>
 
@@ -1072,9 +1209,260 @@
   function closeModalOnBg(e){ if(e.target===document.getElementById('contact-modal')) closeModal(); }
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
+  // =====================================================================
+  // VIDEO PORTFOLIO — EDIT YOUR VIDEOS HERE
+  // =====================================================================
+  // HOW TO ADD A VIDEO:
+  //   Just add a new line inside the right group's [ ] list:
+  //     { id: "VIDEO_ID", title: "My New Video" },
+  //   The id is the part of the YouTube URL after /shorts/ or ?v=
+  //   e.g. for https://www.youtube.com/shorts/WSqJydTBcKI  ->  id: "WSqJydTBcKI"
+  //
+  // IF A VIDEO WON'T PLAY:
+  //   Go to the video on YouTube → Share → Embed, copy the FULL <iframe>
+  //   code they give you, and paste it into that video's "embed" field
+  //   instead of just using "id". Example:
+  //     {
+  //       id: "WSqJydTBcKI",
+  //       title: "My New Video",
+  //       embed: '<iframe width="465" height="826" src="https://www.youtube.com/embed/WSqJydTBcKI" title="video 30" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'
+  //     },
+  //   When "embed" is set, that exact code is used as-is — nothing is
+  //   changed or regenerated. The "id" is still required (it's used for
+  //   the thumbnail image and the "Watch on YouTube" fallback link).
+  //
+  // HOW TO ADD A NEW GROUP (tab):
+  //   Add a new "Group Name": [ ... ] block anywhere in VIDEO_GROUPS below,
+  //   e.g.  "UGC Content": [ { id: "abc123", title: "UGC Ad 01" } ]
+  //   A new tab is created automatically — nothing else to change.
+  //
+  // HOW TO REMOVE A VIDEO OR GROUP:
+  //   Just delete its line (or its whole block for a group).
+  // =====================================================================
+  const VIDEO_GROUPS = {
+
+    "TikTok / Reels": [
+      { id: "WSqJydTBcKI", title: "TikTok Edit 01", embed: '<iframe width="465" height="826" src="https://www.youtube.com/embed/WSqJydTBcKI" title="video 30" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' },
+      { id: "HEfRraoscHg", title: "TikTok Edit 02" },
+      { id: "0iB4iQd9YVA", title: "TikTok Edit 03" },
+      { id: "amF0G8k7dYM", title: "TikTok Edit 04" },
+      { id: "xLgtlVaDLDE", title: "TikTok Edit 05" },
+      { id: "d6HrBqZ-Ve4", title: "TikTok Edit 06" },
+      { id: "MUuk1SydDLc", title: "TikTok Edit 07" },
+      { id: "HhD5vrNkTmo", title: "TikTok Edit 08" },
+      { id: "Yio-UedyoBU", title: "TikTok Edit 09" },
+      { id: "JpODF1Cc4Oc", title: "TikTok Edit 10" }
+    ],
+
+    "YouTube Shorts": [
+      { id: "a7RNY4YlrWU", title: "YouTube Short 01" },
+      { id: "zLeatjS2Beg", title: "YouTube Short 02" },
+      { id: "8wB8uU2TZxA", title: "YouTube Short 03" },
+      { id: "7WQsdVwE988", title: "YouTube Short 04" },
+      { id: "5uFolKECUg4", title: "YouTube Short 05" },
+      { id: "zmCo0KD1qX0", title: "YouTube Short 06" },
+      { id: "uRqxi4-yM9w", title: "YouTube Short 07" },
+      { id: "u95bAHDpZM0", title: "YouTube Short 08" },
+      { id: "-1oXhrMxGyI", title: "YouTube Short 09" },
+      { id: "zHNZ3XpajZ0", title: "YouTube Short 10" }
+    ],
+
+    "Advertising": [
+      { id: "yDnVmgOQHKs", title: "Ad Campaign 01" },
+      { id: "72bQ4PkOFLM", title: "Ad Campaign 02" },
+      { id: "cVat23e8IYc", title: "Ad Campaign 03" },
+      { id: "zoB0EJmWIpw", title: "Ad Campaign 04" },
+      { id: "ndMbMS3pq_E", title: "Ad Campaign 05" },
+      { id: "KLIPT-seteU", title: "Ad Campaign 06" },
+      { id: "-r_LJbD4Wng", title: "Ad Campaign 07" },
+      { id: "Fjde5r0EPxA", title: "Ad Campaign 08" },
+      { id: "ZoRzggoP_JY", title: "Ad Campaign 09" },
+      { id: "OGwaHEzjaJI", title: "Ad Campaign 10" }
+    ]
+
+  };
+
+  // How many cards to show initially (collapsed state).
+  const VIDEOS_PER_PAGE = 4;
+  // How many rows tall the scrollable frame is once "Show More" is clicked.
+  const SCROLL_ROWS = 2;
+
+  (function initPortfolio(){
+    const tabsEl  = document.getElementById('portfolio-tabs');
+    const gridEl  = document.getElementById('portfolio-grid');
+    const moreWrap = document.getElementById('portfolio-more-wrap');
+    const moreBtn  = document.getElementById('portfolio-more-btn');
+    if (!tabsEl || !gridEl) return;
+
+    const playIcon = '<svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8V4z"/></svg>';
+
+    // Flatten VIDEO_GROUPS into a single list, each item tagged with its group name
+    const ALL_VIDEOS = [];
+    Object.keys(VIDEO_GROUPS).forEach(group => {
+      VIDEO_GROUPS[group].forEach(v => ALL_VIDEOS.push({ ...v, group }));
+    });
+
+    // Make every video's data available to the modal by its id — used
+    // instead of inline onclick so custom "embed" codes (which contain
+    // quotes) never break the HTML.
+    window.VIDEO_LOOKUP = {};
+    ALL_VIDEOS.forEach(v => { window.VIDEO_LOOKUP[v.id] = v; });
+
+    let activeGroup = 'all';
+    let expanded = false; // false = showing first VIDEOS_PER_PAGE only, true = showing all in a scroll frame
+
+    // Build tabs: "All" + one per group, in the order they appear above
+    const groupNames = Object.keys(VIDEO_GROUPS);
+    tabsEl.innerHTML = ['all', ...groupNames].map((g, i) => {
+      const label = g === 'all' ? 'All' : g;
+      return `<button class="portfolio-tab${i===0?' active':''}" data-group="${g}">${label}</button>`;
+    }).join('');
+
+    function attachCursorHover(el){
+      el.addEventListener('mouseenter', () => { cursor.style.transform='scale(2)'; ring.style.width='60px'; ring.style.height='60px'; });
+      el.addEventListener('mouseleave', () => { cursor.style.transform='scale(1)'; ring.style.width='38px'; ring.style.height='38px'; });
+    }
+
+    // Sizes the scrollable frame to exactly SCROLL_ROWS rows of cards,
+    // based on the actual rendered card height (which changes with screen width).
+    function updateScrollFrameHeight(){
+      if (!expanded) return;
+      const firstCard = gridEl.querySelector('.portfolio-card');
+      if (!firstCard) return;
+      const cardHeight = firstCard.getBoundingClientRect().height;
+      const gapPx = parseFloat(getComputedStyle(gridEl).rowGap) || 22;
+      gridEl.style.maxHeight = (cardHeight * SCROLL_ROWS + gapPx * (SCROLL_ROWS - 1)) + 'px';
+    }
+
+    function render(){
+      const filtered = activeGroup === 'all'
+        ? ALL_VIDEOS
+        : ALL_VIDEOS.filter(v => v.group === activeGroup);
+
+      const canExpand = filtered.length > VIDEOS_PER_PAGE;
+      const toShow = expanded ? filtered : filtered.slice(0, VIDEOS_PER_PAGE);
+
+      gridEl.innerHTML = toShow.map(v => {
+        const thumb = `https://img.youtube.com/vi/${v.id}/hqdefault.jpg`;
+        const fallback = `https://img.youtube.com/vi/${v.id}/mqdefault.jpg`;
+        return `
+          <button type="button" class="portfolio-card" data-video-id="${v.id}" aria-label="Play ${v.title}">
+            <img src="${thumb}" alt="${v.title}" loading="lazy" onerror="this.onerror=null;this.src='${fallback}';">
+            <span class="portfolio-play">${playIcon}</span>
+            <span class="portfolio-tag">${v.group}</span>
+            <span class="portfolio-label">${v.title}</span>
+          </button>`;
+      }).join('');
+
+      gridEl.querySelectorAll('.portfolio-card').forEach(card => {
+        attachCursorHover(card);
+        card.addEventListener('click', () => openVideoModal(card.dataset.videoId));
+      });
+
+      // Scroll frame only applies once expanded (so all videos fit in a
+      // fixed-height box the user scrolls inside, instead of the whole page)
+      if (expanded && canExpand) {
+        gridEl.classList.add('scroll-mode');
+        gridEl.scrollTop = 0;
+        // Wait a frame so the browser has laid out the cards before measuring
+        requestAnimationFrame(updateScrollFrameHeight);
+      } else {
+        gridEl.classList.remove('scroll-mode');
+        gridEl.style.maxHeight = '';
+      }
+
+      // Show More / Show Less button
+      if (!canExpand) {
+        moreWrap.style.display = 'none';
+      } else {
+        moreWrap.style.display = 'flex';
+        moreBtn.querySelector('span').textContent = expanded ? 'Show Less' : 'Show More';
+      }
+    }
+
+    // Tab click = change group + collapse back to the first page
+    tabsEl.querySelectorAll('.portfolio-tab').forEach(attachCursorHover);
+    tabsEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.portfolio-tab');
+      if (!btn) return;
+      tabsEl.querySelectorAll('.portfolio-tab').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeGroup = btn.dataset.group;
+      expanded = false;
+      render();
+    });
+
+    // Show More / Show Less toggle
+    if (moreBtn) {
+      attachCursorHover(moreBtn);
+      moreBtn.addEventListener('click', () => {
+        expanded = !expanded;
+        render();
+        if (!expanded) {
+          document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    }
+
+    // Recalculate the scroll frame height if the window is resized
+    // (card size changes at different breakpoints)
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(updateScrollFrameHeight, 150);
+    });
+
+    render();
+  })();
+
+  // Video player modal (embedded — no navigating away from the site)
+  function openVideoModal(id){
+    const video = (window.VIDEO_LOOKUP && window.VIDEO_LOOKUP[id]) || {};
+    const overlay = document.getElementById('video-modal');
+    const frame = document.getElementById('video-modal-frame');
+    const fallback = document.getElementById('video-modal-fallback');
+
+    if (video.embed) {
+      // A custom embed code was pasted in for this video — use it exactly as-is.
+      frame.innerHTML = video.embed;
+    } else {
+      // Default: matches YouTube's own official embed code (Share → Embed) —
+      // same attributes, same "allow" list, same referrerpolicy — plus
+      // autoplay=1 so it starts playing as soon as the popup opens.
+      frame.innerHTML = `<iframe width="100%" height="100%" src="https://www.youtube.com/embed/${id}?autoplay=1" title="${video.title || 'Video player'}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+    }
+
+    // Always keep a working fallback link to the real video, in case a
+    // specific one still won't embed for you.
+    fallback.href = `https://www.youtube.com/shorts/${id}`;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeVideoModal(){
+    const overlay = document.getElementById('video-modal');
+    document.getElementById('video-modal-frame').innerHTML = ''; // stops playback
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  function closeVideoModalOnBg(e){ if (e.target === document.getElementById('video-modal')) closeVideoModal(); }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoModal(); });
+
 </script>
 
-<!-- CONTACT MODAL -->
+<!-- VIDEO PLAYER MODAL (used by the Video Portfolio section) -->
+<div class="video-modal-overlay" id="video-modal" onclick="closeVideoModalOnBg(event)">
+  <div class="video-modal-wrap">
+    <button class="video-modal-close" onclick="closeVideoModal()" aria-label="Close">&times;</button>
+    <div class="video-modal-box">
+      <div id="video-modal-frame"></div>
+    </div>
+    <a class="video-modal-fallback" id="video-modal-fallback" href="#" target="_blank" rel="noopener noreferrer">
+      Video not loading? <span>Watch on YouTube ↗</span>
+    </a>
+  </div>
+</div>
+
 <div class="modal-overlay" id="contact-modal" onclick="closeModalOnBg(event)">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal()" aria-label="Close">&times;</button>
