@@ -445,12 +445,17 @@
   .portfolio-grid.scroll-mode::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
   .portfolio-grid.scroll-mode::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
   .portfolio-card {
-    position: relative; display: block; aspect-ratio: 3 / 4; border-radius: 12px;
+    position: relative; display: block; width: 100%; height: 0;
+    padding-top: 133.33%; /* forces a reliable 3:4 box on every browser, even iOS Safari inside a scrolling grid */
+    border-radius: 12px;
     overflow: hidden; background: var(--dark3); border: 1px solid var(--border-dim);
     text-decoration: none; cursor: none; transition: transform 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
   }
   .portfolio-card:hover { transform: translateY(-6px); border-color: var(--border); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-  .portfolio-card img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s ease; }
+  .portfolio-card img {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; display: block; transition: transform 0.6s ease;
+  }
   .portfolio-card:hover img { transform: scale(1.07); }
   .portfolio-card::before {
     content: ''; position: absolute; inset: 0; z-index: 1;
@@ -497,17 +502,23 @@
     position: fixed; inset: 0; background: rgba(5,4,0,0.92);
     z-index: 600; display: flex; align-items: center; justify-content: center;
     opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-    backdrop-filter: blur(6px); padding: 40px 20px;
+    backdrop-filter: blur(6px); padding: 30px 20px;
   }
   .video-modal-overlay.open { opacity: 1; pointer-events: all; }
   .video-modal-wrap {
-    position: relative; width: 100%; max-width: 380px;
+    position: relative;
+    /* Fills as much of the screen as possible while staying a true 9:16 shape:
+       width is capped by 92% of viewport width OR by what an 86vh-tall 9:16
+       box would need, whichever is smaller. Height then follows automatically. */
+    width: min(92vw, calc(86vh * 9 / 16));
+    aspect-ratio: 9 / 16;
+    margin: 0 auto;
     transform: translateY(24px); transition: transform 0.35s ease;
   }
   .video-modal-overlay.open .video-modal-wrap { transform: translateY(0); }
   .video-modal-box {
-    position: relative; width: 100%;
-    aspect-ratio: 9 / 16; background: var(--dark3); border: 1px solid var(--border);
+    position: relative; width: 100%; height: 100%;
+    background: var(--dark3); border: 1px solid var(--border);
     overflow: hidden;
   }
   .video-modal-box iframe { width: 100%; height: 100%; border: 0; display: block; }
@@ -523,6 +534,20 @@
   }
   .video-modal-fallback:hover { color: var(--gold-light); }
   .video-modal-fallback span { color: var(--gold-light); text-decoration: underline; }
+  .video-modal-error {
+    width: 100%; height: 100%; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px; padding: 28px; text-align: center;
+  }
+  .video-modal-error p {
+    color: var(--text-dim); font-size: 13px; line-height: 1.7; max-width: 240px;
+    font-weight: 300;
+  }
+  .video-modal-error a {
+    display: inline-block; padding: 12px 28px; border: 1px solid var(--gold);
+    color: var(--gold-light); text-decoration: none; font-family: 'Outfit', sans-serif;
+    font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; transition: all 0.3s;
+  }
+  .video-modal-error a:hover { background: var(--gold); color: var(--dark); }
 
   /* CONTACT */
   #contact { background: var(--dark2); position: relative; overflow: hidden; }
@@ -666,7 +691,6 @@
     .portfolio-label { font-size: 12px; }
     .portfolio-play { width: 28px; height: 28px; top: 10px; left: 10px; }
     .portfolio-tag { top: 10px; right: 10px; font-size: 9px; padding: 3px 8px; }
-    .video-modal-wrap { max-width: 300px; }
     .video-modal-close { top: -40px; font-size: 24px; }
     .portfolio-more-btn { padding: 12px 30px; }
 
@@ -1219,17 +1243,11 @@
   //   e.g. for https://www.youtube.com/shorts/WSqJydTBcKI  ->  id: "WSqJydTBcKI"
   //
   // IF A VIDEO WON'T PLAY:
-  //   Go to the video on YouTube → Share → Embed, copy the FULL <iframe>
-  //   code they give you, and paste it into that video's "embed" field
-  //   instead of just using "id". Example:
-  //     {
-  //       id: "WSqJydTBcKI",
-  //       title: "My New Video",
-  //       embed: '<iframe width="465" height="826" src="https://www.youtube.com/embed/WSqJydTBcKI" title="video 30" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>'
-  //     },
-  //   When "embed" is set, that exact code is used as-is — nothing is
-  //   changed or regenerated. The "id" is still required (it's used for
-  //   the thumbnail image and the "Watch on YouTube" fallback link).
+  //   That means the channel it was uploaded to has embedding turned off
+  //   for that video — this is a setting only the video's owner controls,
+  //   and no code can override it (YouTube blocks it on their end). You'll
+  //   see this automatically: instead of a broken player, the site shows a
+  //   clean "Watch on YouTube" button for that video. Nothing to fix.
   //
   // HOW TO ADD A NEW GROUP (tab):
   //   Add a new "Group Name": [ ... ] block anywhere in VIDEO_GROUPS below,
@@ -1242,7 +1260,7 @@
   const VIDEO_GROUPS = {
 
     "TikTok / Reels": [
-      { id: "WSqJydTBcKI", title: "TikTok Edit 01", embed: '<iframe width="465" height="826" src="https://www.youtube.com/embed/WSqJydTBcKI" title="video 30" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>' },
+      { id: "WSqJydTBcKI", title: "TikTok Edit 01" },
       { id: "HEfRraoscHg", title: "TikTok Edit 02" },
       { id: "0iB4iQd9YVA", title: "TikTok Edit 03" },
       { id: "amF0G8k7dYM", title: "TikTok Edit 04" },
@@ -1302,9 +1320,7 @@
       VIDEO_GROUPS[group].forEach(v => ALL_VIDEOS.push({ ...v, group }));
     });
 
-    // Make every video's data available to the modal by its id — used
-    // instead of inline onclick so custom "embed" codes (which contain
-    // quotes) never break the HTML.
+    // Make every video's data available to the modal by its id
     window.VIDEO_LOOKUP = {};
     ALL_VIDEOS.forEach(v => { window.VIDEO_LOOKUP[v.id] = v; });
 
@@ -1356,7 +1372,7 @@
 
       gridEl.querySelectorAll('.portfolio-card').forEach(card => {
         attachCursorHover(card);
-        card.addEventListener('click', () => openVideoModal(card.dataset.videoId));
+        card.addEventListener('click', () => openVideoModal(card.dataset.videoId, (window.VIDEO_LOOKUP[card.dataset.videoId] || {}).title));
       });
 
       // Scroll frame only applies once expanded (so all videos fit in a
@@ -1416,24 +1432,66 @@
   })();
 
   // Video player modal (embedded — no navigating away from the site)
-  function openVideoModal(id){
-    const video = (window.VIDEO_LOOKUP && window.VIDEO_LOOKUP[id]) || {};
-    const overlay = document.getElementById('video-modal');
+  // Uses YouTube's IFrame Player API instead of a plain <iframe> so we can
+  // detect when a video's owner has embedding turned off (error 101/150)
+  // and automatically show a clean "Watch on YouTube" fallback instead of
+  // a broken/branded preview.
+  let ytApiReady = false;
+  let ytPlayer = null;
+  let pendingVideoId = null;
+  let pendingVideoTitle = null;
+
+  // Load the YouTube IFrame API script once
+  (function loadYouTubeApi(){
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+  })();
+
+  window.onYouTubeIframeAPIReady = function(){
+    ytApiReady = true;
+    if (pendingVideoId) {
+      createYTPlayer(pendingVideoId, pendingVideoTitle);
+      pendingVideoId = null;
+      pendingVideoTitle = null;
+    }
+  };
+
+  function createYTPlayer(id, title){
     const frame = document.getElementById('video-modal-frame');
+    frame.innerHTML = '<div id="yt-player-el"></div>';
+    ytPlayer = new YT.Player('yt-player-el', {
+      videoId: id,
+      playerVars: { autoplay: 1, playsinline: 1, rel: 0 },
+      events: {
+        onError: function(){ showVideoEmbedError(id); }
+      }
+    });
+  }
+
+  function showVideoEmbedError(id){
+    const frame = document.getElementById('video-modal-frame');
+    frame.innerHTML = `
+      <div class="video-modal-error">
+        <p>This video isn't available for preview here — the channel has embedding turned off for it.</p>
+        <a href="https://www.youtube.com/shorts/${id}" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a>
+      </div>`;
+  }
+
+  function openVideoModal(id, title){
+    const overlay = document.getElementById('video-modal');
     const fallback = document.getElementById('video-modal-fallback');
 
-    if (video.embed) {
-      // A custom embed code was pasted in for this video — use it exactly as-is.
-      frame.innerHTML = video.embed;
+    if (ytApiReady && window.YT && YT.Player) {
+      createYTPlayer(id, title);
     } else {
-      // Default: matches YouTube's own official embed code (Share → Embed) —
-      // same attributes, same "allow" list, same referrerpolicy — plus
-      // autoplay=1 so it starts playing as soon as the popup opens.
-      frame.innerHTML = `<iframe width="465" height="826" src="https://www.youtube.com/embed/${id}?autoplay=1" title="${video.title || 'Video player'}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
+      // API script still loading — remember what to open once it's ready
+      pendingVideoId = id;
+      pendingVideoTitle = title;
+      document.getElementById('video-modal-frame').innerHTML = '';
     }
 
-    // Always keep a working fallback link to the real video, in case a
-    // specific one still won't embed for you.
+    // Always keep a working fallback link to the real video too
     fallback.href = `https://www.youtube.com/shorts/${id}`;
 
     overlay.classList.add('open');
@@ -1441,12 +1499,16 @@
   }
   function closeVideoModal(){
     const overlay = document.getElementById('video-modal');
+    if (ytPlayer && ytPlayer.destroy) { ytPlayer.destroy(); ytPlayer = null; }
     document.getElementById('video-modal-frame').innerHTML = ''; // stops playback
+    pendingVideoId = null;
+    pendingVideoTitle = null;
     overlay.classList.remove('open');
     document.body.style.overflow = '';
   }
   function closeVideoModalOnBg(e){ if (e.target === document.getElementById('video-modal')) closeVideoModal(); }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideoModal(); });
+
 
 </script>
 
