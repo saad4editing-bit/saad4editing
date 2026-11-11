@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hanzi Cards — Chinese Flashcards</title>
+<style>
+  :root {
+    --ink: #253047;
+    --muted: #78839a;
+    --paper: #f6f7fb;
+    --white: #fff;
+    --purple: #7567e8;
+    --purple-dark: #5e50d0;
+    --green: #27a879;
+    --red: #e36b75;
+    --line: #e8eaf2;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; padding: 28px 16px;
+    background: radial-gradient(circle at 10% 5%, #eeeaff 0, transparent 32%),
+                radial-gradient(circle at 95% 90%, #e5f7f1 0, transparent 30%), var(--paper);
+    color: var(--ink); font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+    display: flex; justify-content: center;
+  }
+  .app { width: min(760px, 100%); }
+  header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:26px; }
+  .brand { display:flex; align-items:center; gap:11px; }
+  .logo { width:43px;height:43px;border-radius:14px;background:var(--purple);color:white;display:grid;place-items:center;font-size:25px;font-weight:800;box-shadow:0 7px 18px #7567e844; }
+  h1 { font-size:20px; margin:0; letter-spacing:-.5px; }
+  .sub { color:var(--muted);font-size:12px;margin-top:3px; }
+  .top-actions { display:flex;gap:8px; }
+  button { font:inherit; cursor:pointer; border:0; transition:.18s ease; }
+  button:focus-visible, textarea:focus-visible { outline:3px solid #aaa2ff;outline-offset:2px; }
+  .small-btn { background:white;border:1px solid var(--line);color:var(--ink);padding:9px 12px;border-radius:11px;font-size:13px;font-weight:650; }
+  .small-btn:hover { transform:translateY(-1px);border-color:#c9c5f8; }
+  .stats { display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:19px; }
+  .stat { background:#ffffffc9;border:1px solid var(--line);border-radius:16px;padding:13px 15px; }
+  .stat-label { color:var(--muted);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px; }
+  .stat-value { font-size:22px;font-weight:800;margin-top:3px; }
+  .progress-wrap { height:7px;background:#e9eaf3;border-radius:99px;overflow:hidden;margin:0 2px 22px; }
+  .progress { height:100%;width:0;background:linear-gradient(90deg,var(--purple),#a69cff);border-radius:99px;transition:width .25s; }
+  .study-label { display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin:0 3px 10px; }
+  .card-area { perspective:1200px; position:relative; touch-action:pan-y; user-select:none; -webkit-user-select:none; }
+  .swipe-stamp { position:absolute; z-index:5; top:24px; padding:8px 13px; border:3px solid currentColor; border-radius:10px; font-size:clamp(15px,3vw,22px); font-weight:900; letter-spacing:2px; opacity:0; pointer-events:none; }
+  .stamp-right { right:18px; color:#1baf7a; transform:rotate(10deg); }
+  .stamp-left { left:18px; color:#e35d70; transform:rotate(-10deg); }
+  .flashcard { width:100%;min-height:340px;position:relative;cursor:pointer;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.2,.75,.2,1); }
+  .flashcard.flipped { transform:rotateY(180deg); }
+  .face { position:absolute;inset:0;min-height:340px;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:white;border:1px solid var(--line);border-radius:25px;box-shadow:0 14px 40px #29304a0d;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center; }
+  .back { transform:rotateY(180deg);background:linear-gradient(145deg,#fff,#faf9ff); }
+  .face-tag { position:absolute;top:22px;color:#9aa2b3;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase; }
+  .hanzi { font-family:"Noto Sans CJK SC","Microsoft YaHei",sans-serif;font-size:clamp(90px,18vw,142px);line-height:1.2;font-weight:600;color:#262d43; }
+  .pinyin { color:var(--purple-dark);font-size:29px;font-weight:750;margin-bottom:10px; }
+  .meaning { color:#48536b;font-size:20px;font-weight:600; }
+  .hint { color:#a0a7b6;font-size:12px;margin-top:23px; }
+  .controls { display:flex;gap:12px;margin-top:18px; }
+  .control-btn { flex:1;padding:15px 12px;border-radius:15px;font-weight:750;font-size:15px; }
+  .reveal { background:var(--purple);color:white;box-shadow:0 8px 18px #7567e833; }
+  .reveal:hover { background:var(--purple-dark);transform:translateY(-1px); }
+  .correct { background:#e6f7f0;color:#16835d; }
+  .incorrect { background:#fff0f1;color:#cf515d; }
+  .correct:hover { background:#d7f2e7; }
+  .incorrect:hover { background:#ffe3e6; }
+  .controls .control-btn:disabled { opacity:.45;cursor:not-allowed;transform:none; }
+  .keyboard { text-align:center;color:#9aa2b3;font-size:11px;margin:13px 0 27px; }
+  kbd { background:white;border:1px solid var(--line);border-radius:5px;padding:2px 5px;color:#68738a; }
+  .panel { background:#ffffffc9;border:1px solid var(--line);border-radius:18px;padding:17px 18px;margin-top:15px; }
+  .panel-head { display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:11px; }
+  .panel h2 { font-size:14px;margin:0; }
+  .panel p { color:var(--muted);font-size:12px;line-height:1.5;margin:5px 0 11px; }
+  .input-grid { display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px; }
+  .input-label { display:block;color:#626d83;font-size:12px;font-weight:750; }
+  textarea { display:block;width:100%;min-height:180px;margin-top:7px;resize:vertical;border:1px solid var(--line);border-radius:12px;padding:12px;background:#fbfbfe;color:var(--ink);font:13px/1.8 ui-monospace,SFMono-Regular,Consolas,monospace; }
+  .panel-actions { display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap; }
+  .primary { background:var(--ink);color:white;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700; }
+  .primary:hover { background:#3b4660; }
+  .quiet { color:var(--muted);font-size:11px; }
+  .message { min-height:16px;color:var(--green);font-size:12px;margin-top:8px; }
+  .empty { text-align:center;padding:65px 20px;background:white;border:1px solid var(--line);border-radius:24px; }
+  .empty-icon { font-size:42px;margin-bottom:10px; }
+  .empty h2 { margin:0 0 7px;font-size:20px; }
+  .empty p { color:var(--muted);font-size:13px;line-height:1.5; }
+  @media(max-width:520px) {
+    body { padding:19px 12px; }
+    header { align-items:flex-start; }
+    h1 {font-size:18px;}
+    .small-btn {padding:8px;font-size:11px;}
+    .stat {padding:11px;}
+    .stat-value {font-size:19px;}
+    .flashcard,.face {min-height:310px;}
+    .input-grid {grid-template-columns:1fr;}
+    textarea {min-height:130px;}
+    .controls {gap:8px;}
+    .control-btn {font-size:13px;padding:14px 8px;}
+  }
+  /* Mobile-first study layout */
+  @media(max-width:600px) {
+    body { padding: max(12px, env(safe-area-inset-top)) 12px max(22px, env(safe-area-inset-bottom)); }
+    .app { width:100%; max-width:480px; }
+    header { align-items:center; margin-bottom:17px; gap:8px; }
+    .logo { width:39px; height:39px; border-radius:13px; }
+    .sub { font-size:11px; }
+    .top-actions { gap:5px; }
+    .small-btn { padding:8px 9px; border-radius:10px; font-size:11px; }
+    .stats { gap:7px; margin-bottom:13px; }
+    .stat { padding:9px 10px; border-radius:13px; }
+    .stat-label { font-size:9px; letter-spacing:.45px; }
+    .stat-value { font-size:19px; }
+    .progress-wrap { margin-bottom:17px; height:6px; }
+    .study-label { font-size:11px; margin-bottom:9px; }
+    .flashcard,.face { min-height: min(54vh, 390px); }
+    .face { border-radius:23px; padding:22px 15px; }
+    .face-tag { top:18px; font-size:10px; }
+    .hanzi { font-size:clamp(105px, 30vw, 160px); }
+    .pinyin { font-size:30px; }
+    .meaning { font-size:18px; }
+    .hint { margin-top:18px; font-size:11px; }
+    .controls { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-top:14px; }
+    .control-btn { min-height:53px; padding:13px 8px; border-radius:15px; font-size:14px; }
+    .reveal { grid-column:1 / -1; }
+    .keyboard { margin:12px 0 22px; line-height:1.5; font-size:10px; }
+    .panel { padding:15px 13px; border-radius:16px; }
+    .input-grid { grid-template-columns:1fr; gap:10px; }
+    textarea { min-height:105px; font-size:14px; }
+    .panel-actions { align-items:stretch; }
+    .panel-actions .primary { width:100%; min-height:44px; }
+  }
+  @media(min-width:601px) and (max-width:900px) {
+    .flashcard,.face { min-height:320px; }
+  }
+  .flashcard.dragging { transition:none !important; }
+  .swipe-stamp.visible { opacity:1; }
+</style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <div class="brand">
+      <div class="logo">汉</div>
+      <div><h1>Hanzi Cards</h1><div class="sub">A little practice every day ✨</div></div>
+    </div>
+    <div class="top-actions">
+      <button class="small-btn" id="shuffleBtn" title="Mix the cards">↻ Shuffle</button>
+      <button class="small-btn" id="resetBtn" title="Start the session again">Reset</button>
+    </div>
+  </header>
+
+  <section class="stats">
+    <div class="stat"><div class="stat-label">To learn</div><div class="stat-value" id="remaining">0</div></div>
+    <div class="stat"><div class="stat-label">Correct</div><div class="stat-value" id="known">0</div></div>
+    <div class="stat"><div class="stat-label">Need practice</div><div class="stat-value" id="missed">0</div></div>
+  </section>
+  <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+
+  <div id="study">
+    <div class="study-label"><span id="counter">Card 0 of 0</span><span>Think first, then flip</span></div>
+    <div class="card-area" id="cardArea">
+      <div class="swipe-stamp stamp-left" id="leftStamp">✕ AGAIN</div>
+      <div class="swipe-stamp stamp-right" id="rightStamp">✓ GOT IT</div>
+      <div class="flashcard" id="flashcard" role="button" tabindex="0" aria-label="Flashcard. Press to reveal the answer.">
+        <div class="face front">
+          <div class="face-tag">Character</div>
+          <div class="hanzi" id="character">汉</div>
+          <div class="hint">Tap the card or press Space to reveal</div>
+        </div>
+        <div class="face back">
+          <div class="face-tag">Pinyin & meaning</div>
+          <div class="pinyin" id="pinyin">hàn</div>
+          <div class="meaning" id="meaning">Chinese</div>
+          <div class="hint">Did you remember it?</div>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button class="control-btn reveal" id="revealBtn">👀 Reveal answer</button>
+      <button class="control-btn incorrect" id="wrongBtn" disabled>← Incorrect</button>
+      <button class="control-btn correct" id="rightBtn" disabled>Correct →</button>
+    </div>
+    <div class="keyboard">Swipe <strong>right</strong> if correct · Swipe <strong>left</strong> if incorrect · Tap to reveal</div>
+  </div>
+
+  <section class="empty" id="complete" hidden>
+    <div class="empty-icon">🎉</div>
+    <h2>All done for now!</h2>
+    <p>You reviewed every card in this session. Great work!<br>Incorrect cards will come back until you get them right.</p>
+    <button class="primary" id="againBtn">Practice again</button>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head"><h2>📚 Your character list</h2><span class="quiet" id="listCount">0 cards loaded</span></div>
+    <p>Enter one item per line in each box. Keep the same order in all three boxes so each character matches its pinyin and meaning.</p>
+    <div class="input-grid three-inputs">
+      <label class="input-label">Chinese characters<textarea id="charactersInput" spellcheck="false" aria-label="Chinese characters, one per line">你
+好
+我
+是
+人
+大
+小
+中
+国
+学</textarea></label>
+      <label class="input-label">Pinyin<textarea id="pinyinInput" spellcheck="false" aria-label="Pinyin, one per line">nǐ
+hǎo
+wǒ
+shì
+rén
+dà
+xiǎo
+zhōng
+guó
+xué</textarea></label>
+      <label class="input-label">Meaning<textarea id="meaningInput" spellcheck="false" aria-label="Meanings, one per line">you
+good
+I / me
+to be
+person
+big
+small
+middle / China
+country
+to study</textarea></label>
+    </div>
+    <div class="panel-actions">
+      <span class="quiet">Your list is saved automatically in this browser.</span>
+      <button class="primary" id="loadBtn">Load my cards</button>
+    </div>
+    <div class="message" id="message" role="status"></div>
+  </section>
+</main>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const starter = [
+    ["你","nǐ","you"],["好","hǎo","good"],["我","wǒ","I / me"],["是","shì","to be"],
+    ["人","rén","person"],["大","dà","big"],["小","xiǎo","small"],["中","zhōng","middle / China"],
+    ["国","guó","country"],["学","xué","to study"]
+  ];
+  let cards = starter.map((c,i)=>({id:i,...{character:c[0],pinyin:c[1],meaning:c[2]}}));
+  let queue = [], current = null, flipped = false, known = 0, missed = 0, total = cards.length;
+
+  const parse = (charactersRaw, pinyinRaw, meaningRaw) => {
+    const characters = charactersRaw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    const pinyin = pinyinRaw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    const meanings = meaningRaw.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+    if(!characters.length) throw new Error("Add at least one Chinese character.");
+    if(characters.length !== pinyin.length || characters.length !== meanings.length) {
+      throw new Error(`Line counts must match: ${characters.length} characters, ${pinyin.length} pinyin entries, and ${meanings.length} meanings.`);
+    }
+    return characters.map((character,index) => {
+      if(!pinyin[index] || !meanings[index]) throw new Error(`Please complete pinyin and meaning on line ${index+1}.`);
+      return {id:index,character,pinyin:pinyin[index],meaning:meanings[index]};
+    });
+  };
+
+  function updateStats() {
+    $("remaining").textContent = queue.length;
+    $("known").textContent = known;
+    $("missed").textContent = missed;
+    $("counter").textContent = total ? `Card ${Math.min(known+missed+1,total)} of ${total}` : "No cards";
+    $("progress").style.width = (total ? known/total*100 : 0) + "%";
+    $("listCount").textContent = `${cards.length} card${cards.length===1?"":"s"} loaded`;
+  }
+  function render() {
+    updateStats();
+    if(!queue.length) {
+      $("study").hidden = true;
+      $("complete").hidden = false;
+      return;
+    }
+    $("study").hidden = false;
+    $("complete").hidden = true;
+    current = queue[0];
+    $("character").textContent = current.character;
+    $("pinyin").textContent = current.pinyin;
+    $("meaning").textContent = current.meaning;
+    setFlipped(false);
+  }
+  function setFlipped(value) {
+    flipped = value;
+    $("flashcard").classList.toggle("flipped",flipped);
+    $("revealBtn").hidden = flipped;
+    $("rightBtn").disabled = !flipped;
+    $("wrongBtn").disabled = !flipped;
+  }
+  function reveal() { if(current && !flipped) setFlipped(true); }
+  function rate(isCorrect) {
+    if(!current || !flipped) return;
+    queue.shift();
+    if(isCorrect) known++;
+    else {
+      missed++;
+      // Put missed cards back later in the queue, not immediately next.
+      const insertAt = Math.min(queue.length, Math.max(1, Math.floor(Math.random()*4)+1));
+      queue.splice(insertAt,0,current);
+    }
+    render();
+  }
+  function startSession(newCards) {
+    cards = newCards;
+    total = cards.length;
+    known = 0; missed = 0;
+    queue = [...cards];
+    for(let i=queue.length-1;i>0;i--) {
+      const j=Math.floor(Math.random()*(i+1));
+      [queue[i],queue[j]]=[queue[j],queue[i]];
+    }
+    render();
+  }
+  $("flashcard").addEventListener("click",reveal);
+  $("flashcard").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();reveal();}});
+  $("revealBtn").addEventListener("click",reveal);
+  $("rightBtn").addEventListener("click",()=>rate(true));
+  $("wrongBtn").addEventListener("click",()=>rate(false));
+
+  // Tinder-style swipe: right = correct, left = incorrect.
+  const cardArea = $("cardArea");
+  const swipeCard = $("flashcard");
+  let pointerStartX = 0, pointerStartY = 0, dragX = 0, dragging = false, suppressClick = false;
+  const resetSwipe = () => {
+    swipeCard.classList.remove("dragging");
+    swipeCard.style.transform = "";
+    $("leftStamp").classList.remove("visible");
+    $("rightStamp").classList.remove("visible");
+    dragX = 0;
+  };
+  cardArea.addEventListener("pointerdown", e => {
+    if (!flipped || !current || e.button !== 0) return;
+    pointerStartX = e.clientX;
+    pointerStartY = e.clientY;
+    dragX = 0;
+    dragging = true;
+    swipeCard.classList.add("dragging");
+    cardArea.setPointerCapture(e.pointerId);
+  });
+  cardArea.addEventListener("pointermove", e => {
+    if (!dragging) return;
+    const dx = e.clientX - pointerStartX;
+    const dy = e.clientY - pointerStartY;
+    if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 12) {
+      dragging = false;
+      resetSwipe();
+      return;
+    }
+    dragX = dx;
+    const tilt = Math.max(-13, Math.min(13, dx / 18));
+    swipeCard.style.transform = `translateX(${dx}px) rotate(${tilt}deg) rotateY(180deg)`;
+    $("rightStamp").classList.toggle("visible", dx > 18);
+    $("leftStamp").classList.toggle("visible", dx < -18);
+    if (Math.abs(dx) > 8) e.preventDefault();
+  });
+  cardArea.addEventListener("pointerup", () => {
+    if (!dragging) return;
+    dragging = false;
+    if (Math.abs(dragX) > 95) {
+      const correct = dragX > 0;
+      suppressClick = true;
+      swipeCard.classList.remove("dragging");
+      swipeCard.style.transition = "transform .2s ease-out";
+      swipeCard.style.transform = `translateX(${correct ? 650 : -650}px) rotate(${correct ? 20 : -20}deg) rotateY(180deg)`;
+      window.setTimeout(() => { resetSwipe(); rate(correct); swipeCard.style.transition = ""; }, 170);
+    } else resetSwipe();
+  });
+  cardArea.addEventListener("pointercancel", () => { dragging = false; resetSwipe(); });
+  swipeCard.addEventListener("click", e => {
+    if (suppressClick) { e.stopImmediatePropagation(); suppressClick = false; }
+  }, true);
+
+  $("loadBtn").addEventListener("click",()=>{
+    try {
+      const charactersRaw=$("charactersInput").value;
+      const pinyinRaw=$("pinyinInput").value;
+      const meaningRaw=$("meaningInput").value;
+      const parsed=parse(charactersRaw,pinyinRaw,meaningRaw);
+      localStorage.setItem("hanziCharacters",charactersRaw);
+      localStorage.setItem("hanziPinyin",pinyinRaw);
+      localStorage.setItem("hanziMeanings",meaningRaw);
+      startSession(parsed);
+      $("message").textContent="✓ Your cards are loaded and saved in this browser.";
+    } catch(err) { $("message").textContent="⚠ "+err.message; }
+  });
+  $("shuffleBtn").addEventListener("click",()=>{
+    if(!cards.length)return;
+    const remainingCards=[...queue];
+    for(let i=remainingCards.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[remainingCards[i],remainingCards[j]]=[remainingCards[j],remainingCards[i]];}
+    queue=remainingCards; render();
+  });
+  $("resetBtn").addEventListener("click",()=>startSession(cards));
+  $("againBtn").addEventListener("click",()=>startSession(cards));
+  document.addEventListener("keydown",e=>{
+    if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT") return;
+    if(e.code==="Space"){e.preventDefault();reveal();}
+    if(e.key==="ArrowRight")rate(true);
+    if(e.key==="ArrowLeft")rate(false);
+  });
+  const savedCharacters=localStorage.getItem("hanziCharacters");
+  const savedPinyin=localStorage.getItem("hanziPinyin");
+  const savedMeanings=localStorage.getItem("hanziMeanings");
+  if(savedCharacters !== null && savedPinyin !== null && savedMeanings !== null) {
+    $("charactersInput").value=savedCharacters;
+    $("pinyinInput").value=savedPinyin;
+    $("meaningInput").value=savedMeanings;
+    try { startSession(parse(savedCharacters,savedPinyin,savedMeanings)); }
+    catch(e) { startSession(cards); $("message").textContent="⚠ Saved list needs fixing: "+e.message; }
+  } else startSession(cards);
+})();
+</script>
+</body>
+</html>
