@@ -132,16 +132,44 @@
   }
   .flashcard.dragging { transition:none !important; }
   .swipe-stamp.visible { opacity:1; }
+  .focus-topbar { display:none; align-items:center; justify-content:space-between; width:100%; padding:calc(12px + env(safe-area-inset-top)) 18px 12px; }
+  .focus-brand { font-weight:800; letter-spacing:.3px; color:var(--muted); }
+  .focus-exit { background:#ffffffeb; border:1px solid var(--line); border-radius:999px; padding:10px 16px; color:var(--ink); font-weight:750; }
+  body.focus-mode { padding:0; min-height:100dvh; overflow:hidden; background:#f7f6ff; }
+  body.focus-mode .app { width:100%; max-width:none; height:100dvh; display:flex; flex-direction:column; }
+  body.focus-mode .focus-topbar { display:flex; }
+  body.focus-mode .app>header, body.focus-mode .stats, body.focus-mode .progress-wrap,
+  body.focus-mode .study-label, body.focus-mode .controls, body.focus-mode .keyboard,
+  body.focus-mode .panel, body.focus-mode #complete { display:none !important; }
+  body.focus-mode #study { flex:1; min-height:0; display:flex; flex-direction:column; padding:0 14px calc(16px + env(safe-area-inset-bottom)); }
+  body.focus-mode .card-area { flex:1; min-height:0; display:flex; align-items:stretch; }
+  body.focus-mode .flashcard { min-height:0; height:100%; }
+  body.focus-mode .face { min-height:0; border-radius:28px; box-shadow:0 18px 55px #29304a12; }
+  body.focus-mode .hanzi { font-size:clamp(150px, 38vw, 250px); }
+  body.focus-mode .hint { font-size:13px; }
+  body.focus-mode .swipe-stamp { top:28px; }
+  body.focus-mode #complete { margin:auto 16px; }
+  body.focus-mode #complete[hidden] { display:none !important; }
+  @media(max-width:600px) {
+    body.focus-mode #study { padding-left:12px; padding-right:12px; }
+    body.focus-mode .hanzi { font-size:clamp(150px, 43vw, 230px); }
+    body.focus-mode .face { padding:20px 12px; }
+  }
 </style>
 </head>
 <body>
 <main class="app">
+  <div class="focus-topbar" id="focusTopbar" hidden>
+    <span class="focus-brand">汉字练习</span>
+    <button class="focus-exit" id="exitFocusBtn">✕ Exit</button>
+  </div>
   <header>
     <div class="brand">
       <div class="logo">汉</div>
       <div><h1>Hanzi Cards</h1><div class="sub">A little practice every day ✨</div></div>
     </div>
     <div class="top-actions">
+      <button class="small-btn" id="focusBtn" title="Open distraction-free study mode">⛶ Focus</button>
       <button class="small-btn" id="shuffleBtn" title="Mix the cards">↻ Shuffle</button>
       <button class="small-btn" id="resetBtn" title="Start the session again">Reset</button>
     </div>
@@ -309,7 +337,10 @@ to study</textarea></label>
     }
     render();
   }
-  $("flashcard").addEventListener("click",reveal);
+  $("flashcard").addEventListener("click",e=>{
+    if(Date.now() < ignoreClickUntil) { e.preventDefault(); return; }
+    reveal();
+  });
   $("flashcard").addEventListener("keydown",e=>{if(e.key===" "||e.key==="Enter"){e.preventDefault();reveal();}});
   $("revealBtn").addEventListener("click",reveal);
   $("rightBtn").addEventListener("click",()=>rate(true));
@@ -318,7 +349,7 @@ to study</textarea></label>
   // Tinder-style swipe: right = correct, left = incorrect.
   const cardArea = $("cardArea");
   const swipeCard = $("flashcard");
-  let pointerStartX = 0, pointerStartY = 0, dragX = 0, dragging = false, suppressClick = false;
+  let pointerStartX = 0, pointerStartY = 0, dragX = 0, dragging = false, ignoreClickUntil = 0;
   const resetSwipe = () => {
     swipeCard.classList.remove("dragging");
     swipeCard.style.transform = "";
@@ -356,7 +387,7 @@ to study</textarea></label>
     dragging = false;
     if (Math.abs(dragX) > 95) {
       const correct = dragX > 0;
-      suppressClick = true;
+      ignoreClickUntil = Date.now() + 450;
       swipeCard.classList.remove("dragging");
       swipeCard.style.transition = "transform .2s ease-out";
       swipeCard.style.transform = `translateX(${correct ? 650 : -650}px) rotate(${correct ? 20 : -20}deg) rotateY(180deg)`;
@@ -364,10 +395,6 @@ to study</textarea></label>
     } else resetSwipe();
   });
   cardArea.addEventListener("pointercancel", () => { dragging = false; resetSwipe(); });
-  swipeCard.addEventListener("click", e => {
-    if (suppressClick) { e.stopImmediatePropagation(); suppressClick = false; }
-  }, true);
-
   $("loadBtn").addEventListener("click",()=>{
     try {
       const charactersRaw=$("charactersInput").value;
@@ -389,8 +416,27 @@ to study</textarea></label>
   });
   $("resetBtn").addEventListener("click",()=>startSession(cards));
   $("againBtn").addEventListener("click",()=>startSession(cards));
+  function setFocusMode(enabled) {
+    document.body.classList.toggle("focus-mode", enabled);
+    $("focusTopbar").hidden = !enabled;
+    if (enabled && document.documentElement.requestFullscreen) {
+      document.documentElement.requestFullscreen().catch(()=>{});
+    } else if (!enabled && document.fullscreenElement && document.exitFullscreen) {
+      document.exitFullscreen().catch(()=>{});
+    }
+    resetSwipe();
+  }
+  $("focusBtn").addEventListener("click",()=>setFocusMode(true));
+  $("exitFocusBtn").addEventListener("click",()=>setFocusMode(false));
+  document.addEventListener("fullscreenchange",()=>{
+    if (!document.fullscreenElement && document.body.classList.contains("focus-mode")) {
+      document.body.classList.remove("focus-mode");
+      $("focusTopbar").hidden = true;
+    }
+  });
   document.addEventListener("keydown",e=>{
     if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT") return;
+    if(e.key==="Escape" && document.body.classList.contains("focus-mode")) { setFocusMode(false); return; }
     if(e.code==="Space"){e.preventDefault();reveal();}
     if(e.key==="ArrowRight")rate(true);
     if(e.key==="ArrowLeft")rate(false);
